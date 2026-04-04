@@ -24,10 +24,5 @@ public class Store extends BaseEntity {
     private LocalTime closeTime;
 
     @Column(nullable = false)
-    private boolean isActive;
-
-    @PrePersist
-    protected void prePersist() {
-        this.isActive = true;
-    }
+    private boolean isActive = true;
 }

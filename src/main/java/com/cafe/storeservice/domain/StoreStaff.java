@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(
+        columnNames = {"store_id, user_id"}
+))
 public class StoreStaff {
 
     @Id
