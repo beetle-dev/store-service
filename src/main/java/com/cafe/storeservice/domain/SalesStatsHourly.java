@@ -30,18 +30,23 @@ public class SalesStatsHourly {
     @Column(nullable = false)
     private LocalDateTime statHour;
 
+    @Builder.Default
     @Column(nullable = false)
     private Integer orderCount = 0;
 
+    @Builder.Default
     @Column(nullable = false, precision = 12)
     private BigDecimal totalSales = BigDecimal.ZERO;
 
+    @Builder.Default
     @Column(nullable = false, precision = 12)
     private BigDecimal cardSales = BigDecimal.ZERO;
 
+    @Builder.Default
     @Column(nullable = false, precision = 12)
     private BigDecimal cashSales = BigDecimal.ZERO;
 
+    @Builder.Default
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();

@@ -30,6 +30,7 @@ public class Store extends BaseEntity {
     private LocalTime openTime;
     private LocalTime closeTime;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean isActive = true;
 

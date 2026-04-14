@@ -31,15 +31,19 @@ public class SalesStatsDaily {
     @Column(nullable = false)
     private LocalDate statDate;
 
+    @Builder.Default
     @Column(nullable = false)
     private Integer orderCount = 0;
 
+    @Builder.Default
     @Column(nullable = false, precision = 12)
     private BigDecimal totalSales = BigDecimal.ZERO;
 
+    @Builder.Default
     @Column(nullable = false, precision = 12)
     private BigDecimal cardSales = BigDecimal.ZERO;
 
+    @Builder.Default
     @Column(nullable = false, precision = 12)
     private BigDecimal cashSales = BigDecimal.ZERO;
 
@@ -47,6 +51,8 @@ public class SalesStatsDaily {
     private BigDecimal avgOrderPrice;
 
     private Integer peakHour;
+
+
 
     @CreationTimestamp
     @Column(nullable = false)

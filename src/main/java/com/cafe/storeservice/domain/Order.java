@@ -28,6 +28,7 @@ public class Order {
     @Column(nullable = false, unique = true, length = 30)
     private String orderNumber;
 
+    @Builder.Default
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     private Status status = Status.COMPLETED;
@@ -42,6 +43,7 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime orderedAt;
 
+    @Builder.Default
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();

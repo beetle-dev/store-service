@@ -1,13 +1,11 @@
 package com.cafe.storeservice.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
@@ -34,6 +32,7 @@ public class Menus extends BaseEntity {
     @Column(precision = 10, scale = 0)
     private BigDecimal cost;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean isActive = true;
 
