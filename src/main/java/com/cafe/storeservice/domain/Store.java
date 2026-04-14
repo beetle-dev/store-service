@@ -1,9 +1,11 @@
 package com.cafe.storeservice.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.time.LocalTime;
 
+@Getter
 @Entity
 public class Store extends BaseEntity {
 
