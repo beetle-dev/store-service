@@ -1,7 +1,10 @@
 package com.cafe.storeservice.service;
 
+import com.cafe.storeservice.common.exception.CustomException;
+import com.cafe.storeservice.common.response.ErrorCode;
 import com.cafe.storeservice.common.response.PageResponse;
 import com.cafe.storeservice.domain.MenuCategories;
+import com.cafe.storeservice.dto.MenuReqDto;
 import com.cafe.storeservice.dto.MenuSpecification;
 import com.cafe.storeservice.domain.Menus;
 import com.cafe.storeservice.dto.MenuResDto;
@@ -14,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,5 +40,23 @@ public class MenuService {
         Page<Menus> menus = menuRepository.findAll(MenuSpecification.search(searchDto), pageable);
 
         return PageResponse.of(menus.map(MenuResDto::from));
+    }
+
+    @Transactional
+    public void register(MenuReqDto reqDto) {
+         MenuCategories menuCategories = menuCategoryRepository.findByNameContaining(reqDto.getMenuCategory())
+                 .orElse(null);
+
+         menuRepository.findByName(reqDto.getName())
+                 .ifPresent(menus-> {throw new CustomException(ErrorCode.VALIDATION_FAILED);});
+
+         menuRepository.save(Menus.builder()
+                         .menuCategories(menuCategories)
+                         .name(reqDto.getName())
+                         .description(reqDto.getDescription())
+                         .price(reqDto.getPrice())
+                         .cost(reqDto.getCost())
+                         .imageUrl(reqDto.getImageUrl())
+                 .build());
     }
 }
