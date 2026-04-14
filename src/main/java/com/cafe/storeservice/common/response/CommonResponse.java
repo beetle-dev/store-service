@@ -2,8 +2,12 @@ package com.cafe.storeservice.common.response;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
+@Builder
 @RequiredArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommonResponse<T> {
@@ -14,12 +18,12 @@ public class CommonResponse<T> {
 
     private static final String SUCCESS_CODE = "SUCCESS";
 
-    public static <T> CommonResponse<T> ok() {
-        return new CommonResponse<>(SUCCESS_CODE, null, null);
-    }
-
     public static <T> CommonResponse<T> ok(T data) {
         return new CommonResponse<>(SUCCESS_CODE, null, data);
+    }
+
+    public static <T> CommonResponse<T> ok() {
+        return new CommonResponse<>(SUCCESS_CODE, null, null);
     }
 
     public static <T> CommonResponse<T> fail(String code, String message) {
@@ -28,5 +32,9 @@ public class CommonResponse<T> {
 
     public static <T> CommonResponse<T> fail(ErrorCode errorCode) {
         return new CommonResponse<>(errorCode.getCode(), errorCode.getMessage(), null);
+    }
+
+    public static <T> CommonResponse<String> reissueAccessToken(String accessToken) {
+        return new CommonResponse<>("REISSUE_ACCESS_TOJKEN",null, accessToken);
     }
 }

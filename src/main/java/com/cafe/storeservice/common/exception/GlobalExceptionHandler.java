@@ -2,7 +2,6 @@ package com.cafe.storeservice.common.exception;
 
 import com.cafe.storeservice.common.response.CommonResponse;
 import com.cafe.storeservice.common.response.ErrorCode;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,6 +13,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<CommonResponse<?>> handleValidation(MethodArgumentNotValidException e) {
+
         String message = e.getBindingResult().getFieldErrors().stream()
                 .map(FieldError::getDefaultMessage)
                 .findFirst()
@@ -21,8 +21,14 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .badRequest()
-                .body(CommonResponse.fail(ErrorCode.INVALID_INPUT.getCode(), message));
+                .body(CommonResponse.fail(ErrorCode.VALIDATION_FAILED.getCode(), message));
+    }
 
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<CommonResponse<?>> handleCustomException(CustomException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        return ResponseEntity
+                .status(errorCode.getStatus())
+                .body(CommonResponse.fail(errorCode));
     }
 }
-

@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Table(name = "orders")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
