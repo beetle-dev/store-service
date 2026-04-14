@@ -1,15 +1,13 @@
 package com.cafe.storeservice.controller;
 
 import com.cafe.storeservice.common.response.CommonResponse;
+import com.cafe.storeservice.dto.StoreReqDto;
 import com.cafe.storeservice.dto.StoreSearchDto;
 import com.cafe.storeservice.service.StoreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/stores")
@@ -20,7 +18,13 @@ public class StoreController {
 
     @GetMapping
     public ResponseEntity<CommonResponse<?>> getStores(@Valid @ModelAttribute StoreSearchDto searchDto) {
-        // todo page + where
         return ResponseEntity.ok(CommonResponse.ok(storeService.getStores(searchDto)));
+    }
+
+    @PostMapping
+    public ResponseEntity<CommonResponse<?>> register(@Valid @RequestBody StoreReqDto reqDto) {
+        //todo 어드민 전용
+        storeService.register(reqDto);
+        return ResponseEntity.ok(CommonResponse.ok());
     }
 }
