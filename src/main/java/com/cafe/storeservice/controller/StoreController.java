@@ -27,4 +27,12 @@ public class StoreController {
         storeService.register(reqDto);
         return ResponseEntity.ok(CommonResponse.ok());
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<CommonResponse<?>> modify(@PathVariable("id") Long id,
+                                                    @Valid @RequestBody StoreReqDto reqDto) {
+        storeService.modify(id, reqDto);
+        return ResponseEntity.ok(CommonResponse.ok());
+    }
+
 }

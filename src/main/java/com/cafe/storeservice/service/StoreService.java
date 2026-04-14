@@ -1,5 +1,7 @@
 package com.cafe.storeservice.service;
 
+import com.cafe.storeservice.common.exception.CustomException;
+import com.cafe.storeservice.common.response.ErrorCode;
 import com.cafe.storeservice.common.response.PageResponse;
 import com.cafe.storeservice.domain.Store;
 import com.cafe.storeservice.dto.StoreReqDto;
@@ -44,5 +46,13 @@ public class StoreService {
                         .openTime(reqDto.getOpenTime())
                         .closeTime(reqDto.getCloseTime())
                 .build());
+    }
+
+    @Transactional
+    public void modify(Long id, StoreReqDto reqDto) {
+         Store store = storeRepository.findById(id)
+                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+
+         store.modified(reqDto);
     }
 }
