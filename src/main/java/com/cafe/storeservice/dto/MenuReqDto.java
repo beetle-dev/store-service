@@ -20,6 +20,7 @@ public class MenuReqDto {
     private BigDecimal price;
     private BigDecimal cost;
     private String imageUrl;
+    private Boolean isActive;
 
     private MenuCategories menuCategories;
 }

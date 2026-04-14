@@ -27,4 +27,12 @@ public class MenuController {
         menuService.register(reqDto);
         return ResponseEntity.ok(CommonResponse.ok());
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<CommonResponse<?>> modified(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody MenuReqDto reqDto) {
+        menuService.modified(id, reqDto);
+        return ResponseEntity.ok(CommonResponse.ok());
+    }
 }

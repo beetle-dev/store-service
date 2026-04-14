@@ -1,7 +1,9 @@
 package com.cafe.storeservice.domain;
 
+import com.cafe.storeservice.dto.MenuReqDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 
@@ -38,4 +40,9 @@ public class Menus extends BaseEntity {
 
     @Column(length = 500)
     private String imageUrl;
+
+    public void modified(MenuReqDto reqDto) {
+        if (reqDto.getPrice() != null) this.price = reqDto.getPrice();
+        if (reqDto.getIsActive() != null) this.isActive = reqDto.getIsActive();
+    }
 }

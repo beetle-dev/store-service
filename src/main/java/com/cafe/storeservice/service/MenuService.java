@@ -59,4 +59,12 @@ public class MenuService {
                          .imageUrl(reqDto.getImageUrl())
                  .build());
     }
+
+    @Transactional
+    public void modified(Long id, MenuReqDto reqDto) {
+        Menus menu = menuRepository.findById(id)
+                .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
+
+        menu.modified(reqDto);
+    }
 }
