@@ -3,9 +3,12 @@ package com.cafe.storeservice.service;
 import com.cafe.storeservice.common.exception.CustomException;
 import com.cafe.storeservice.common.exception.ErrorCode;
 import com.cafe.storeservice.common.response.PageResponse;
+import com.cafe.storeservice.domain.InventoryLog;
 import com.cafe.storeservice.domain.Store;
 import com.cafe.storeservice.domain.StoreInventory;
 import com.cafe.storeservice.dto.*;
+import com.cafe.storeservice.repository.IngredientRepository;
+import com.cafe.storeservice.repository.InventoryLogRepository;
 import com.cafe.storeservice.repository.StoreInventoryRepository;
 import com.cafe.storeservice.repository.StoreRepository;
 import com.cafe.storeservice.specification.StoreSpecification;
@@ -14,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -22,6 +26,8 @@ public class StoreService {
 
     private final StoreRepository storeRepository;
     private final StoreInventoryRepository storeInventoryRepository;
+    private final InventoryLogRepository inventoryLogRepository;
+    private final IngredientRepository ingredientRepository;
 
     public PageResponse<StoreResDto> getStores(StoreSearchDto searchDto) {
 
@@ -59,6 +65,20 @@ public class StoreService {
         StoreInventory storeInventory = storeInventoryRepository.findByStoreIdAndIngredientId(storeId, reqDto.getIngredientId())
                 .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
 
-        storeInventory.adjust(reqDto.getQuantity());
+        BigDecimal currentStock = storeInventory.getCurrentStock();
+        BigDecimal quantity = reqDto.getQuantity();
+        BigDecimal stockAfter = currentStock.add(quantity);
+
+        storeInventory.setCurrentStock(stockAfter);
+
+        // todo performedBy
+        inventoryLogRepository.save(InventoryLog.builder()
+                        .store(storeRepository.findById(storeId).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND)))
+                        .ingredient(ingredientRepository.findById(reqDto.getIngredientId()).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND)))
+                        .changeType(reqDto.getChangeType())
+                        .quantity(reqDto.getQuantity())
+                        .stockAfter(stockAfter)
+                        .note(reqDto.getNote())
+                .build());
     }
 }

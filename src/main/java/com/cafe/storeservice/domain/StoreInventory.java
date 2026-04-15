@@ -2,15 +2,13 @@ package com.cafe.storeservice.domain;
 
 import com.cafe.storeservice.dto.InventoryReqDto;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(
         columnNames = {"store_id, ingredient_id"}
@@ -32,6 +30,7 @@ public class StoreInventory {
     @JoinColumn(name = "ingredient_id", nullable = false)
     private Ingredient ingredient;
 
+    @Setter
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal currentStock;
 
@@ -46,9 +45,5 @@ public class StoreInventory {
     protected void prePersist() {
         if (this.currentStock == null) this.currentStock = BigDecimal.ZERO;
         if (this.minStock == null) this.minStock = BigDecimal.ZERO;
-    }
-
-    public void adjust(BigDecimal quantity) {
-        this.currentStock = this.currentStock.add(quantity);
     }
 }
