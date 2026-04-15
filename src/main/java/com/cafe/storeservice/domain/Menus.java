@@ -41,8 +41,9 @@ public class Menus extends BaseEntity {
     @Column(length = 500)
     private String imageUrl;
 
-    public void modified(MenuReqDto reqDto) {
+    public void modified(MenuReqDto reqDto, String key) {
         if (reqDto.getPrice() != null) this.price = reqDto.getPrice();
         if (reqDto.getIsActive() != null) this.isActive = reqDto.getIsActive();
+        if (StringUtils.hasText(key)) this.imageUrl = key;
     }
 }

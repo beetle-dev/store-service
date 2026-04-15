@@ -1,6 +1,5 @@
 package com.cafe.storeservice.common.exception;
 
-import com.cafe.storeservice.common.response.ErrorCode;
 import lombok.Getter;
 
 @Getter

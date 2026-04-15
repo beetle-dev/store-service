@@ -1,6 +1,7 @@
 package com.cafe.storeservice.common.response;
 
 
+import com.cafe.storeservice.common.exception.ErrorCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;

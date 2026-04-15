@@ -4,6 +4,7 @@ import com.cafe.storeservice.domain.MenuCategories;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 
@@ -19,7 +20,7 @@ public class MenuReqDto {
     @NotNull
     private BigDecimal price;
     private BigDecimal cost;
-    private String imageUrl;
+    private MultipartFile image;
     private Boolean isActive;
 
     private MenuCategories menuCategories;

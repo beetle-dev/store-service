@@ -1,7 +1,6 @@
 package com.cafe.storeservice.common.exception;
 
 import com.cafe.storeservice.common.response.CommonResponse;
-import com.cafe.storeservice.common.response.ErrorCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;

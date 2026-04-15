@@ -1,7 +1,7 @@
 package com.cafe.storeservice.service;
 
 import com.cafe.storeservice.common.exception.CustomException;
-import com.cafe.storeservice.common.response.ErrorCode;
+import com.cafe.storeservice.common.exception.ErrorCode;
 import com.cafe.storeservice.common.response.PageResponse;
 import com.cafe.storeservice.domain.Store;
 import com.cafe.storeservice.dto.StoreReqDto;
