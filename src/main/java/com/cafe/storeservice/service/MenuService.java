@@ -10,15 +10,11 @@ import com.cafe.storeservice.domain.Menu;
 import com.cafe.storeservice.repository.MenuCategoryRepository;
 import com.cafe.storeservice.repository.MenuRepository;
 import com.cafe.storeservice.specification.MenuSpecification;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Duration;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 @Service
 @RequiredArgsConstructor
@@ -33,9 +29,6 @@ public class MenuService {
 
     @Transactional(readOnly = true)
     public PageResponse<MenuResDto> getMenus(MenuSearchDto searchDto) {
-
-        searchDto.setMenuCategoryEntity(menuCategoryRepository.findByNameContaining(searchDto.getMenuCategory()).orElse(null));
-
         Page<Menu> menus = menuRepository.findAll(MenuSpecification.search(searchDto), SearchDto.toPageable(searchDto));
 
         return PageResponse.of(menus.map(menu -> {

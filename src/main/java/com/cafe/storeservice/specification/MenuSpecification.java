@@ -12,16 +12,16 @@ public final class MenuSpecification {
 
     public static Specification<Menu> search(MenuSearchDto dto) {
         return Specification.allOf(
-                menuCategoryEquals(dto.getMenuCategoryEntity()),
+                menuCategoryEquals(dto.getMenuCategoryId()),
                 nameContains(dto.getName()),
                 isActiveEquals(dto.getIsActive())
         );
     }
 
-    public static Specification<Menu> menuCategoryEquals(MenuCategory menuCategory) {
+    public static Specification<Menu> menuCategoryEquals(Long menuCategoryId) {
         return (root, query, cb) ->
-                menuCategory != null
-                        ? cb.equal(root.get("menuCategory"), menuCategory)
+                menuCategoryId != null
+                        ? cb.equal(root.get("menuCategory").get("id"), menuCategoryId)
                         : null;
     }
 

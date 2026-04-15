@@ -3,6 +3,7 @@ package com.cafe.storeservice.service;
 import com.cafe.storeservice.common.exception.CustomException;
 import com.cafe.storeservice.common.exception.ErrorCode;
 import com.cafe.storeservice.common.response.PageResponse;
+import com.cafe.storeservice.domain.Ingredient;
 import com.cafe.storeservice.domain.InventoryLog;
 import com.cafe.storeservice.domain.Store;
 import com.cafe.storeservice.domain.StoreInventory;
@@ -11,6 +12,7 @@ import com.cafe.storeservice.repository.IngredientRepository;
 import com.cafe.storeservice.repository.InventoryLogRepository;
 import com.cafe.storeservice.repository.StoreInventoryRepository;
 import com.cafe.storeservice.repository.StoreRepository;
+import com.cafe.storeservice.specification.InventoryLogSpecification;
 import com.cafe.storeservice.specification.StoreSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -80,5 +82,16 @@ public class StoreService {
                         .stockAfter(stockAfter)
                         .note(reqDto.getNote())
                 .build());
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<InventoryLogResDto> getInventoryLogs(Long storeId, InventoryLogSearchDto searchDto) {
+
+        storeRepository.findById(storeId)
+                .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
+
+        Page<InventoryLog> inventoryLogs = inventoryLogRepository.findAll(InventoryLogSpecification.search(searchDto), SearchDto.toPageable(searchDto));
+
+        return PageResponse.of(inventoryLogs.map(InventoryLogResDto::from));
     }
 }
