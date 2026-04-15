@@ -66,9 +66,9 @@ public class S3Service {
         return s3Presigner.presignPutObject(presignRequest).url().toString();
     }
 
-    public String generatePresignedDownloadUrl(String key, Duration ttl) {
+    public String generatePresignedDownloadUrl(String key) {
         GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
-                .signatureDuration(ttl)
+                .signatureDuration(Duration.ofMinutes(15))
                 .getObjectRequest(b -> b.bucket(bucket).key(key))
                 .build();
         return s3Presigner.presignGetObject(presignRequest).url().toString();

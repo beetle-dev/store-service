@@ -35,4 +35,9 @@ public class StoreController {
         return ResponseEntity.ok(CommonResponse.ok());
     }
 
+    @GetMapping("/{id}/inventory")
+    public ResponseEntity<CommonResponse<?>> getInventory(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(CommonResponse.ok(storeService.getInventory(id)));
+    }
+
 }
