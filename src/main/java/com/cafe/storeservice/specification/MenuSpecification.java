@@ -1,8 +1,8 @@
-package com.cafe.storeservice.dto;
+package com.cafe.storeservice.specification;
 
-import com.cafe.storeservice.domain.MenuCategories;
-import com.cafe.storeservice.domain.Menus;
-import com.cafe.storeservice.domain.Store;
+import com.cafe.storeservice.domain.MenuCategory;
+import com.cafe.storeservice.domain.Menu;
+import com.cafe.storeservice.dto.MenuSearchDto;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 
@@ -10,29 +10,29 @@ public final class MenuSpecification {
 
     public MenuSpecification (){}
 
-    public static Specification<Menus> search(MenuSearchDto dto) {
+    public static Specification<Menu> search(MenuSearchDto dto) {
         return Specification.allOf(
-                menuCategoryEquals(dto.getMenuCategories()),
+                menuCategoryEquals(dto.getMenuCategoryEntity()),
                 nameContains(dto.getName()),
                 isActiveEquals(dto.getIsActive())
         );
     }
 
-    public static Specification<Menus> menuCategoryEquals(MenuCategories menuCategories) {
+    public static Specification<Menu> menuCategoryEquals(MenuCategory menuCategory) {
         return (root, query, cb) ->
-                menuCategories != null
-                        ? cb.equal(root.get("menuCategories"), menuCategories)
+                menuCategory != null
+                        ? cb.equal(root.get("menuCategory"), menuCategory)
                         : null;
     }
 
-    public static Specification<Menus> nameContains(String name) {
+    public static Specification<Menu> nameContains(String name) {
         return (root, query, cb) ->
                 StringUtils.hasText(name)
                         ? cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%")
                         : null;
     }
 
-    private static Specification<Menus> isActiveEquals(Boolean isActive) {
+    private static Specification<Menu> isActiveEquals(Boolean isActive) {
         return (root, query, cb) ->
                 isActive != null
                         ? cb.equal(root.get("isActive"), isActive)

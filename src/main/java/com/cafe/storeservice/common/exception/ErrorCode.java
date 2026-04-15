@@ -14,7 +14,8 @@ public enum ErrorCode {
     S3_FILE_NOT_FOUND("S004", "파일을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     S3_INVALID_FILE("S005", "유효하지 않은 파일입니다.", HttpStatus.BAD_REQUEST),
     VALIDATION_FAILED ("S006", "입력값이 유효하지 않습니다.", HttpStatus.BAD_REQUEST),
-    S3_FILE_SIZE_EXCEEDED("S007","파일 크기가 초과되었습니다.", HttpStatus.PAYLOAD_TOO_LARGE);
+    S3_FILE_SIZE_EXCEEDED("S007","파일 크기가 초과되었습니다.", HttpStatus.PAYLOAD_TOO_LARGE),
+    DUPLICATE_MENU_NAME("S008", "이미 존재하는 메뉴 이름입니다.", HttpStatus.CONFLICT);
 
     private final String code;
     private final String message;

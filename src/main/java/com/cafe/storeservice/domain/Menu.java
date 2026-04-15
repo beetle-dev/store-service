@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
-public class Menus extends BaseEntity {
+public class Menu extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +20,7 @@ public class Menus extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
-    private MenuCategories menuCategories;
+    private MenuCategory menuCategory;
 
     @Column(nullable = false, length = 100, unique = true)
     private String name;
@@ -43,6 +43,7 @@ public class Menus extends BaseEntity {
 
     public void modified(MenuReqDto reqDto, String key) {
         if (reqDto.getPrice() != null) this.price = reqDto.getPrice();
+        if (StringUtils.hasText(reqDto.getDescription())) this.description = reqDto.getDescription();
         if (reqDto.getIsActive() != null) this.isActive = reqDto.getIsActive();
         if (StringUtils.hasText(key)) this.imageUrl = key;
     }

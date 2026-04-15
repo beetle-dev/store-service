@@ -1,10 +1,12 @@
 package com.cafe.storeservice.repository;
 
-import com.cafe.storeservice.domain.MenuCategories;
+import com.cafe.storeservice.domain.MenuCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface MenuCategoryRepository extends JpaRepository<MenuCategories, Long> {
-    Optional<MenuCategories> findByNameContaining(String menuCategory);
+public interface MenuCategoryRepository extends JpaRepository<MenuCategory, Long> {
+    Optional<MenuCategory> findByNameContaining(String menuCategory);
+
+    Optional<MenuCategory> findByName(String name);
 }

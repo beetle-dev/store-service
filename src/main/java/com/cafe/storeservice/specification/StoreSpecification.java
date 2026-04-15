@@ -1,6 +1,7 @@
-package com.cafe.storeservice.dto;
+package com.cafe.storeservice.specification;
 
 import com.cafe.storeservice.domain.Store;
+import com.cafe.storeservice.dto.StoreSearchDto;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 

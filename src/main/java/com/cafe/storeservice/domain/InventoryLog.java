@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
-public class InventoryLogs {
+public class InventoryLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

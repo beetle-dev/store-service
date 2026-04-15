@@ -46,8 +46,7 @@ public class SalesStatsHourly {
     @Column(nullable = false, precision = 12)
     private BigDecimal cashSales = BigDecimal.ZERO;
 
-    @Builder.Default
     @CreationTimestamp
     @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 }

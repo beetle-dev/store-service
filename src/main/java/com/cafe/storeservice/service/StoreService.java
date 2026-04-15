@@ -4,16 +4,11 @@ import com.cafe.storeservice.common.exception.CustomException;
 import com.cafe.storeservice.common.exception.ErrorCode;
 import com.cafe.storeservice.common.response.PageResponse;
 import com.cafe.storeservice.domain.Store;
-import com.cafe.storeservice.dto.StoreReqDto;
-import com.cafe.storeservice.dto.StoreResDto;
-import com.cafe.storeservice.dto.StoreSearchDto;
-import com.cafe.storeservice.dto.StoreSpecification;
+import com.cafe.storeservice.dto.*;
 import com.cafe.storeservice.repository.StoreRepository;
+import com.cafe.storeservice.specification.StoreSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,14 +20,7 @@ public class StoreService {
 
     public PageResponse<StoreResDto> getStores(StoreSearchDto searchDto) {
 
-        Sort sort = Sort.by(
-                Sort.Direction.fromString(searchDto.getDirection()),
-                searchDto.getSort()
-        );
-
-        Pageable pageable = PageRequest.of(searchDto.getPage(), searchDto.getSize(), sort);
-
-        Page<Store> storeList = storeRepository.findAll(StoreSpecification.search(searchDto), pageable);
+        Page<Store> storeList = storeRepository.findAll(StoreSpecification.search(searchDto), SearchDto.toPageable(searchDto));
 
         return PageResponse.of(storeList.map(StoreResDto::from));
     }

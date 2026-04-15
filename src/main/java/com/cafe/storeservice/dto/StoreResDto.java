@@ -2,9 +2,11 @@ package com.cafe.storeservice.dto;
 
 import com.cafe.storeservice.domain.Store;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalTime;
 
+@Getter
 @Builder
 public class StoreResDto {
 

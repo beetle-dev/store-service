@@ -43,8 +43,7 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime orderedAt;
 
-    @Builder.Default
     @CreationTimestamp
     @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 }

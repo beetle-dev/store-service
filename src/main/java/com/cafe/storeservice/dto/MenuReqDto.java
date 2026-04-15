@@ -1,13 +1,15 @@
 package com.cafe.storeservice.dto;
 
-import com.cafe.storeservice.domain.MenuCategories;
+import com.cafe.storeservice.domain.MenuCategory;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 
+@Setter
 @Getter
 public class MenuReqDto {
     private String menuCategory;
@@ -23,5 +25,5 @@ public class MenuReqDto {
     private MultipartFile image;
     private Boolean isActive;
 
-    private MenuCategories menuCategories;
+    private MenuCategory menuCategoryEntity;
 }

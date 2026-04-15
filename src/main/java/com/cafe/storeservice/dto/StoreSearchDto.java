@@ -8,20 +8,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class StoreSearchDto {
+public class StoreSearchDto extends SearchDto {
     private String name;
     private String address;
     private String phone;
     private Boolean isActive;
-
-    @Min(0)
-    private int page = 0;
-
-    @Max(100)
-    private int size = 20;
-
-    private String sort = "createdAt";
-
-    @Pattern(regexp = "^(ASC|DESC)$", message = "direction은 ASC 또는 DESC만 허용됩니다.")
-    private String direction = "DESC";
 }

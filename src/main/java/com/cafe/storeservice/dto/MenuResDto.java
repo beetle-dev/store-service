@@ -1,15 +1,16 @@
 package com.cafe.storeservice.dto;
 
-import com.cafe.storeservice.domain.MenuCategories;
-import com.cafe.storeservice.domain.Menus;
+import com.cafe.storeservice.domain.Menu;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 
+@Getter
 @Builder
 public class MenuResDto {
     private Long id;
-    private MenuCategories menuCategories;
+    private String menuCategory;
     private String name;
     private String description;
     private BigDecimal price;
@@ -17,16 +18,16 @@ public class MenuResDto {
     private Boolean isActive;
     private String imageUrl;
 
-    public static MenuResDto from(Menus menus) {
+    public static MenuResDto from(Menu menu, String imageUrl) {
         return MenuResDto.builder()
-                .id(menus.getId())
-                .menuCategories(menus.getMenuCategories())
-                .name(menus.getName())
-                .description(menus.getDescription())
-                .price(menus.getPrice())
-                .cost(menus.getCost())
-                .isActive(menus.getIsActive())
-                .imageUrl(menus.getImageUrl())
+                .id(menu.getId())
+                .menuCategory(menu.getMenuCategory() != null ? menu.getMenuCategory().getName() : null)
+                .name(menu.getName())
+                .description(menu.getDescription())
+                .price(menu.getPrice())
+                .cost(menu.getCost())
+                .isActive(menu.getIsActive())
+                .imageUrl(imageUrl)
                 .build();
     }
 }
