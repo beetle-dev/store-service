@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
+@Table(name = "order_items")
 public class OrderItem {
 
     @Id

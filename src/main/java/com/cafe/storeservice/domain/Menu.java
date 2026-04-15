@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
+@Table(name = "menus")
 public class Menu extends BaseEntity {
 
     @Id

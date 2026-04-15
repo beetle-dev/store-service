@@ -12,6 +12,7 @@ import java.time.LocalTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@Table(name = "stores")
 public class Store extends BaseEntity {
 
     @Id
