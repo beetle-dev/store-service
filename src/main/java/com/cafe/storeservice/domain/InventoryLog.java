@@ -26,7 +26,7 @@ public class InventoryLog {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ingredient_id", nullable = false)
-    private Ingredients ingredient;
+    private Ingredient ingredient;
 
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)

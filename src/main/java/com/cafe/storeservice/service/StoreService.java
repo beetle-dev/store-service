@@ -4,6 +4,7 @@ import com.cafe.storeservice.common.exception.CustomException;
 import com.cafe.storeservice.common.exception.ErrorCode;
 import com.cafe.storeservice.common.response.PageResponse;
 import com.cafe.storeservice.domain.Store;
+import com.cafe.storeservice.domain.StoreInventory;
 import com.cafe.storeservice.dto.*;
 import com.cafe.storeservice.repository.StoreInventoryRepository;
 import com.cafe.storeservice.repository.StoreRepository;
@@ -51,5 +52,13 @@ public class StoreService {
     @Transactional(readOnly = true)
     public List<StoreInventoryResDto> getInventory(Long id) {
         return storeInventoryRepository.findAllByStoreId(id);
+    }
+
+    @Transactional
+    public void adjustInventory(Long storeId, InventoryReqDto reqDto) {
+        StoreInventory storeInventory = storeInventoryRepository.findByStoreIdAndIngredientId(storeId, reqDto.getIngredientId())
+                .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
+
+        storeInventory.adjust(reqDto.getQuantity());
     }
 }
