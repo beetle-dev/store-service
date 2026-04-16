@@ -3,7 +3,6 @@ package com.cafe.storeservice.service;
 import com.cafe.storeservice.common.exception.CustomException;
 import com.cafe.storeservice.common.exception.ErrorCode;
 import com.cafe.storeservice.common.response.PageResponse;
-import com.cafe.storeservice.domain.Ingredient;
 import com.cafe.storeservice.domain.InventoryLog;
 import com.cafe.storeservice.domain.Store;
 import com.cafe.storeservice.domain.StoreInventory;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -58,15 +56,20 @@ public class StoreService {
     }
 
     @Transactional(readOnly = true)
-    public List<StoreInventoryResDto> getInventory(Long id) {
-        return storeInventoryRepository.findAllByStoreId(id);
+    public PageResponse<StoreInventoryResDto> getInventory(Long id) {
+
+        Page<StoreInventory> inventories = storeInventoryRepository.findAllByStoreId(id, SearchDto.toPageable(new SearchDto()));
+
+        return PageResponse.of(inventories.map(StoreInventoryResDto::from));
     }
 
     @Transactional
     public void adjustInventory(Long storeId, InventoryReqDto reqDto) {
+        // todo paging + islow
         StoreInventory storeInventory = storeInventoryRepository.findByStoreIdAndIngredientId(storeId, reqDto.getIngredientId())
                 .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
 
+        BigDecimal minStock = storeInventory.getMinStock();
         BigDecimal currentStock = storeInventory.getCurrentStock();
         BigDecimal quantity = reqDto.getQuantity();
         BigDecimal stockAfter = currentStock.add(quantity);
