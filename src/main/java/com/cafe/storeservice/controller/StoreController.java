@@ -1,10 +1,7 @@
 package com.cafe.storeservice.controller;
 
 import com.cafe.storeservice.common.response.CommonResponse;
-import com.cafe.storeservice.dto.InventoryLogSearchDto;
-import com.cafe.storeservice.dto.InventoryReqDto;
-import com.cafe.storeservice.dto.StoreReqDto;
-import com.cafe.storeservice.dto.StoreSearchDto;
+import com.cafe.storeservice.dto.*;
 import com.cafe.storeservice.service.StoreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,8 +35,9 @@ public class StoreController {
     }
 
     @GetMapping("/{id}/inventory")
-    public ResponseEntity<CommonResponse<?>> getInventory(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(CommonResponse.ok(storeService.getInventory(id)));
+    public ResponseEntity<CommonResponse<?>> getInventory(@PathVariable("id") Long id,
+                                                          @ModelAttribute SearchDto searchDto) {
+        return ResponseEntity.ok(CommonResponse.ok(storeService.getInventory(id, searchDto)));
     }
 
     @PostMapping("/{id}/inventory/adjust")

@@ -56,30 +56,37 @@ public class StoreService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<StoreInventoryResDto> getInventory(Long id) {
+    public PageResponse<StoreInventoryResDto> getInventory(Long id, SearchDto searchDto) {
 
-        Page<StoreInventory> inventories = storeInventoryRepository.findAllByStoreId(id, SearchDto.toPageable(new SearchDto()));
+        Page<StoreInventory> inventories = storeInventoryRepository.findAllByStoreId(id, SearchDto.toPageable(searchDto));
 
         return PageResponse.of(inventories.map(StoreInventoryResDto::from));
     }
 
     @Transactional
     public void adjustInventory(Long storeId, InventoryReqDto reqDto) {
-        // todo paging + islow
         StoreInventory storeInventory = storeInventoryRepository.findByStoreIdAndIngredientId(storeId, reqDto.getIngredientId())
                 .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
 
-        BigDecimal minStock = storeInventory.getMinStock();
         BigDecimal currentStock = storeInventory.getCurrentStock();
         BigDecimal quantity = reqDto.getQuantity();
-        BigDecimal stockAfter = currentStock.add(quantity);
+
+        BigDecimal stockAfter = switch (reqDto.getChangeType()) {
+            case IN     -> currentStock.add(quantity);
+            case OUT    -> currentStock.subtract(quantity);
+            case ADJUST -> quantity;
+        };
+
+        if (stockAfter.compareTo(BigDecimal.ZERO) < 0) {
+            throw new CustomException(ErrorCode.INSUFFICIENT_STOCK);
+        }
 
         storeInventory.setCurrentStock(stockAfter);
 
         // todo performedBy
         inventoryLogRepository.save(InventoryLog.builder()
-                        .store(storeRepository.findById(storeId).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND)))
-                        .ingredient(ingredientRepository.findById(reqDto.getIngredientId()).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND)))
+                        .store(storeInventory.getStore())
+                        .ingredient(storeInventory.getIngredient())
                         .changeType(reqDto.getChangeType())
                         .quantity(reqDto.getQuantity())
                         .stockAfter(stockAfter)

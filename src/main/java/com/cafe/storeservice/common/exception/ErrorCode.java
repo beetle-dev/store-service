@@ -15,9 +15,12 @@ public enum ErrorCode {
     S3_INVALID_FILE("S005", "유효하지 않은 파일입니다.", HttpStatus.BAD_REQUEST),
     VALIDATION_FAILED ("S006", "입력값이 유효하지 않습니다.", HttpStatus.BAD_REQUEST),
     S3_FILE_SIZE_EXCEEDED("S007","파일 크기가 초과되었습니다.", HttpStatus.PAYLOAD_TOO_LARGE),
-    DUPLICATE_MENU_NAME("S008", "이미 존재하는 메뉴 이름입니다.", HttpStatus.CONFLICT);
+    DUPLICATE_MENU_NAME("S008", "이미 존재하는 메뉴 이름입니다.", HttpStatus.CONFLICT),
+    INSUFFICIENT_STOCK("S009", "재고가 부족합니다.", HttpStatus.UNPROCESSABLE_ENTITY),
+    DUPLICATE_CATEGORY_NAME("S010", "이미 존재하는 카테고리 이름입니다.", HttpStatus.CONFLICT);
 
     private final String code;
     private final String message;
     private final HttpStatus status;
 }
+

@@ -10,13 +10,14 @@ import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(
-        columnNames = {"store_id, ingredient_id"}
+@Table(name = "store_inventories",
+        uniqueConstraints = @UniqueConstraint(
+        columnNames = {"store_id", "ingredient_id"}
 ))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
-public class StoreInventory {
+public class StoreInventory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,10 +37,6 @@ public class StoreInventory {
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal minStock;
-
-    @UpdateTimestamp
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
 
     @PrePersist
     protected void prePersist() {

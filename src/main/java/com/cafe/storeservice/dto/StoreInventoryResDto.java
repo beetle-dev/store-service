@@ -1,6 +1,5 @@
 package com.cafe.storeservice.dto;
 
-import com.cafe.storeservice.domain.Ingredient;
 import com.cafe.storeservice.domain.StoreInventory;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,20 +11,25 @@ import java.time.LocalDateTime;
 @Getter
 public class StoreInventoryResDto {
     private Long id;
-    private Ingredient ingredient;
+    private Long ingredientId;
+    private String ingredientName;
+    private String ingredientUnit;
     private BigDecimal currentStock;
     private BigDecimal minStock;
     private LocalDateTime updatedAt;
     private Boolean isLow;
 
-    public static StoreInventoryResDto from (StoreInventory storeInventory) {
+    public static StoreInventoryResDto from(StoreInventory storeInventory) {
         return StoreInventoryResDto.builder()
                 .id(storeInventory.getId())
-                .ingredient(storeInventory.getIngredient())
+                .ingredientId(storeInventory.getIngredient().getId())
+                .ingredientName(storeInventory.getIngredient().getName())
+                .ingredientUnit(storeInventory.getIngredient().getUnit())
                 .currentStock(storeInventory.getCurrentStock())
                 .minStock(storeInventory.getMinStock())
                 .updatedAt(storeInventory.getUpdatedAt())
-                .isLow(currentStock.compareTo(minStock) < 0)
+                .isLow(storeInventory.getCurrentStock()
+                        .compareTo(storeInventory.getMinStock()) < 0)
                 .build();
     }
 }

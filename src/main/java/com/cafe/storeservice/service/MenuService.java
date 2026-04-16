@@ -46,7 +46,7 @@ public class MenuService {
         menuRepository.findByName(reqDto.getName())
                 .ifPresent(menus-> {throw new CustomException(ErrorCode.DUPLICATE_MENU_NAME);});
 
-        MenuCategory menuCategory = menuCategoryRepository.findByNameContaining(reqDto.getMenuCategory())
+        MenuCategory menuCategory = menuCategoryRepository.findByName(reqDto.getMenuCategory())
                  .orElse(null);
 
         if (reqDto.getImage() != null) {
@@ -80,7 +80,7 @@ public class MenuService {
     public void registerCategory(MenuCategoryReqDto reqDto) {
 
         menuCategoryRepository.findByName(reqDto.getName())
-                .ifPresent(MenuCategory -> {throw new CustomException(ErrorCode.DUPLICATE_MENU_NAME);});
+                .ifPresent(MenuCategory -> {throw new CustomException(ErrorCode.DUPLICATE_CATEGORY_NAME);});
 
         MenuCategory.MenuCategoryBuilder builder = MenuCategory.builder()
                 .name(reqDto.getName());

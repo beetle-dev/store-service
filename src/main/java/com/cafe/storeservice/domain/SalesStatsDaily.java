@@ -54,5 +54,5 @@ public class SalesStatsDaily {
 
     @CreationTimestamp
     @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 }

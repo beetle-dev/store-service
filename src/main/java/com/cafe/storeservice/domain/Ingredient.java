@@ -3,6 +3,7 @@ package com.cafe.storeservice.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
