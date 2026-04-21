@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(
-        columnNames = {"store_id, stat_hour"}
+        columnNames = {"store_id", "stat_hour"}
 ))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
@@ -45,8 +45,4 @@ public class SalesStatsHourly {
     @Builder.Default
     @Column(nullable = false, precision = 12)
     private BigDecimal cashSales = BigDecimal.ZERO;
-
-    @CreationTimestamp
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
 }

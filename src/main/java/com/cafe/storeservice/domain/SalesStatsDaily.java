@@ -51,8 +51,4 @@ public class SalesStatsDaily {
     private BigDecimal avgOrderPrice;
 
     private Integer peakHour;
-
-    @CreationTimestamp
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
 }
