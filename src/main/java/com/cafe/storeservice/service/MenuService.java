@@ -88,4 +88,8 @@ public class MenuService {
         if (reqDto.getIsActive() != null) builder.isActive(reqDto.getIsActive());
         menuCategoryRepository.save(builder.build());
     }
+
+    public Menu findById(Long menuId) {
+        return menuRepository.findById(menuId).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
+    }
 }

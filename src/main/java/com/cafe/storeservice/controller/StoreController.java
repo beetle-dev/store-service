@@ -53,4 +53,25 @@ public class StoreController {
         return ResponseEntity.ok(CommonResponse.ok(storeService.getInventoryLogs(storeId, searchDto)));
     }
 
+    @PostMapping("/{id}/orders")
+    public ResponseEntity<CommonResponse<?>> registerOrder(@PathVariable("id") Long storeId,
+                                                           @Valid @RequestBody OrderCreateReqDto orderCreateReqDto) {
+        storeService.registerOrder(storeId, orderCreateReqDto);
+        return ResponseEntity.ok(CommonResponse.ok());
+    }
+
+    @GetMapping("/{id}/orders")
+    public ResponseEntity<CommonResponse<?>> getOrders(@PathVariable("id") Long storeId,
+                                                       @ModelAttribute SearchDto searchDto) {
+        return ResponseEntity.ok(CommonResponse.ok(storeService.getOrders(storeId, searchDto)));
+    }
+
+    @PatchMapping("/{id}/orders/{orderId}/cancel")
+    public ResponseEntity<CommonResponse<?>> updateOrder(@PathVariable("id") Long storeId,
+                                                         @PathVariable("orderId") Long orderId,
+                                                         @Valid @RequestBody OrderUpdateReqDto reqDto) {
+        storeService.updateOrder(storeId, orderId, reqDto);
+
+        return ResponseEntity.ok(CommonResponse.ok());
+    }
 }

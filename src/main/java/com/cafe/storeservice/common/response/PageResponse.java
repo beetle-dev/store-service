@@ -1,5 +1,7 @@
 package com.cafe.storeservice.common.response;
 
+import com.cafe.storeservice.domain.Order;
+import com.cafe.storeservice.dto.OrderResDto;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
@@ -30,4 +32,15 @@ public class PageResponse<T> {
                 .build();
     }
 
+    public static <T> PageResponse<T> of(List<T> content, Page<?> page) {
+        return PageResponse.<T>builder()
+                .content(content)
+                .page(page.getNumber())
+                .size(page.getSize())
+                .totalElements(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .first(page.isFirst())
+                .last(page.isLast())
+                .build();
+    }
 }
