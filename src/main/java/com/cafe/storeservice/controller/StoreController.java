@@ -74,4 +74,16 @@ public class StoreController {
 
         return ResponseEntity.ok(CommonResponse.ok());
     }
+
+    @GetMapping("/{id}/sales/daily")
+    public ResponseEntity<CommonResponse<?>> getSalesDailyHistory(@PathVariable("id") Long id,
+                                                                  @ModelAttribute SalesHistorySearchDto searchDto) {
+        return ResponseEntity.ok(CommonResponse.ok(storeService.getSalesDailyHistory(id, searchDto)));
+    }
+
+    @GetMapping("/{id}/sales/hourly")
+    public ResponseEntity<CommonResponse<?>> getSalesHourlyHistory(@PathVariable("id") Long id,
+                                                                  @ModelAttribute SalesHistorySearchDto searchDto) {
+        return ResponseEntity.ok(CommonResponse.ok(storeService.getSalesHourlyHistory(id, searchDto)));
+    }
 }

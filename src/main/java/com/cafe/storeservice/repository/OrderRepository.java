@@ -1,6 +1,7 @@
 package com.cafe.storeservice.repository;
 
 import com.cafe.storeservice.domain.Order;
+import com.cafe.storeservice.domain.SalesStatsDaily;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Page<Order> findAllByStoreId(Long storeId, Pageable pageable);
 
     List<Order> findAllAtBetween(LocalDateTime oneHourAgo, LocalDateTime now);
+
+    Page<SalesStatsDaily> findByStoreIdAndCreatedAtBetween(Long id, LocalDateTime from, LocalDateTime to, Pageable pageable);
 }

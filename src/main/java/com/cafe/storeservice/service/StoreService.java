@@ -10,12 +10,15 @@ import com.cafe.storeservice.specification.InventoryLogSpecification;
 import com.cafe.storeservice.specification.StoreSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -29,6 +32,8 @@ public class StoreService {
     private final InventoryLogRepository inventoryLogRepository;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
+    private final SalesStatsDailyRepository dailyRepository;
+    private final SalesStatsHourlyRepository hourlyRepository;
 
     public PageResponse<StoreResDto> getStores(StoreSearchDto searchDto) {
 
@@ -164,5 +169,45 @@ public class StoreService {
 
         Order order = orderRepository.findById(orderId).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
         order.setStatus(reqDto.getStatus());
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<SalesStatsDaily> getSalesDailyHistory(Long id, SalesHistorySearchDto searchDto) {
+
+        storeRepository.findById(id).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
+
+        LocalDateTime from = searchDto.getFrom().toLocalDate().atStartOfDay();
+        LocalDateTime to = searchDto.getTo().toLocalDate().atTime(23, 59, 59);
+
+        long days = ChronoUnit.DAYS.between(from, to);
+
+        Page<SalesStatsDaily> dailies;
+        if (days > 30) {
+            dailies = dailyRepository.findByStoreIdAndStatDateBetween(id, from, to, SearchDto.toPageable(searchDto));
+        } else {
+            dailies = orderRepository.findByStoreIdAndCreatedAtBetween(id, from, to, SearchDto.toPageable(searchDto));
+        }
+
+        return PageResponse.of(dailies);
+    }
+
+    @Transactional(readOnly = true)
+    public Object getSalesHourlyHistory(Long id, SalesHistorySearchDto searchDto) {
+
+        storeRepository.findById(id).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
+
+        LocalDateTime from = searchDto.getFrom();
+        LocalDateTime to = searchDto.getTo();
+
+        long days = ChronoUnit.DAYS.between(from, to);
+
+        Page<SalesStatsDaily> hourlies;
+        if (days > 30) {
+            hourlies = hourlyRepository.findByStoreIdAndStatDateBetween(id, from, to, SearchDto.toPageable(searchDto));
+        } else {
+            hourlies = orderRepository.findByStoreIdAndCreatedAtBetween(id, from, to, SearchDto.toPageable(searchDto));
+        }
+
+        return PageResponse.of(hourlies);
     }
 }
