@@ -12,6 +12,7 @@ import com.cafe.storeservice.dto.SearchDto;
 import com.cafe.storeservice.repository.SalesStatsDailyRepository;
 import com.cafe.storeservice.repository.SalesStatsHourlyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,7 @@ public class SalesQueryService {
     private final SalesStatsHourlyRepository hourlyRepository;
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "sales:daily", key = "#id + ':' + #searchDto.toString()")
     public PageResponse<SalesStatsDailyResDto> getSalesDailyHistory(Long id, SalesHistorySearchDto searchDto) {
 
         storeService.findById(id);
@@ -42,6 +44,7 @@ public class SalesQueryService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "sales:hourly", key = "#id + ':' + #searchDto.toString()")
     public Object getSalesHourlyHistory(Long id, SalesHistorySearchDto searchDto) {
 
         storeService.findById(id);

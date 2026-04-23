@@ -38,7 +38,7 @@ public class SalesAggregationScheduler {
 
         groupedByStore.forEach((store, orders) -> {
 
-            SalesCalcResult result = calcSales(orderList);
+            SalesCalcResult result = calcSales(orders);
 
             hourlyRepository.save(SalesStatsHourly.builder()
                     .store(store)

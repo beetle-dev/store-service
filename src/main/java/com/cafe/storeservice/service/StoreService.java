@@ -9,6 +9,8 @@ import com.cafe.storeservice.repository.*;
 import com.cafe.storeservice.specification.InventoryLogSpecification;
 import com.cafe.storeservice.specification.StoreSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,8 @@ public class StoreService {
     private final SalesStatsDailyRepository dailyRepository;
     private final SalesStatsHourlyRepository hourlyRepository;
 
+    @Transactional(readOnly = true)
+    @Cacheable(value = "store:list", key = "#searchDto.toString()")
     public PageResponse<StoreResDto> getStores(StoreSearchDto searchDto) {
 
         Page<Store> storeList = storeRepository.findAll(StoreSpecification.search(searchDto), SearchDto.toPageable(searchDto));
@@ -46,6 +50,7 @@ public class StoreService {
     }
 
     @Transactional
+    @CacheEvict(value = "store:list", allEntries = true)
     public void register(StoreReqDto reqDto) {
         storeRepository.save(Store.builder()
                         .name(reqDto.getName())
@@ -57,6 +62,7 @@ public class StoreService {
     }
 
     @Transactional
+    @CacheEvict(value = "store:list", allEntries = true)
     public void modify(Long id, StoreReqDto reqDto) {
          Store store = storeRepository.findById(id)
                  .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));

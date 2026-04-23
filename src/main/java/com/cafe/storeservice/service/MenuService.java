@@ -12,6 +12,8 @@ import com.cafe.storeservice.repository.MenuRepository;
 import com.cafe.storeservice.specification.MenuSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +30,7 @@ public class MenuService {
     private final S3Service s3Service;
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "menu:list", key = "#searchDto.toString()")
     public PageResponse<MenuResDto> getMenus(MenuSearchDto searchDto) {
         Page<Menu> menus = menuRepository.findAll(MenuSpecification.search(searchDto), SearchDto.toPageable(searchDto));
 
@@ -40,6 +43,7 @@ public class MenuService {
     }
 
     @Transactional
+    @CacheEvict(value = "menu:list", allEntries = true)
     public void register(MenuReqDto reqDto) {
         String key = null;
 
@@ -64,6 +68,7 @@ public class MenuService {
     }
 
     @Transactional
+    @CacheEvict(value = "menu:list", allEntries = true)
     public void modified(Long id, MenuReqDto reqDto) {
         String key = null;
 

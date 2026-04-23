@@ -10,6 +10,7 @@ import com.cafe.storeservice.repository.InventoryLogRepository;
 import com.cafe.storeservice.repository.StoreInventoryRepository;
 import com.cafe.storeservice.specification.InventoryLogSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ public class InventoryService {
     private final InventoryLogRepository inventoryLogRepository;
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "inventory:list", key = "#searchDto.toString()")
     public PageResponse<StoreInventoryResDto> getInventory(Long id, SearchDto searchDto) {
 
         Page<StoreInventory> inventories = storeInventoryRepository.findAllByStoreId(id, SearchDto.toPageable(searchDto));
