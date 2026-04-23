@@ -2,9 +2,11 @@ package com.cafe.storeservice.dto;
 
 import com.cafe.storeservice.domain.OrderItem;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 
+@Getter
 @Builder
 public class OrderItemResDto {
     private Long id;

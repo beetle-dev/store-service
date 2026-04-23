@@ -13,10 +13,10 @@ import java.util.List;
 @Getter
 @Setter
 public class OrderCreateReqDto {
-    @NonNull
-    private BigDecimal totalAmount;
-    @NotEmpty
-    private PaymentMethod paymentMethod;
     @NotNull
+    private BigDecimal totalAmount;
+    @NotNull
+    private PaymentMethod paymentMethod;
+    @NotEmpty
     List<OrderItemReqDto> orderItemReqDtos;
 }

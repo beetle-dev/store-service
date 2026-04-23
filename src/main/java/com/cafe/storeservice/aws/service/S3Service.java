@@ -54,7 +54,12 @@ public class S3Service {
     }
 
     public void delete(String key) {
-        s3Client.deleteObject(b -> b.bucket(bucket).key(key));
+        try {
+            s3Client.deleteObject(b -> b.bucket(bucket).key(key));
+        } catch (Exception e) {
+            log.error("S3 파일 삭제 실패: {}", key, e);
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
     }
 
     // todo Presigned URL (프론트엔드 직접 업로드) ────────────

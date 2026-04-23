@@ -1,15 +1,13 @@
 package com.cafe.storeservice.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(
         columnNames = {"store_id", "stat_hour"}
@@ -45,4 +43,8 @@ public class SalesStatsHourly {
     @Builder.Default
     @Column(nullable = false, precision = 12)
     private BigDecimal cashSales = BigDecimal.ZERO;
+
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 }

@@ -13,8 +13,6 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,34 +32,21 @@ public class SalesAggregationScheduler {
         LocalDateTime now = LocalDateTime.now()
                 .truncatedTo(ChronoUnit.HOURS);
 
-        List<Order> orderList = orderRepository.findAllAtBetween(oneHourAgo, now);
+        List<Order> orderList = orderRepository.findAllByCreatedAtBetween(oneHourAgo, now);
 
         Map<Store, List<Order>> groupedByStore = orderList.stream().collect(Collectors.groupingBy(Order::getStore));
 
         groupedByStore.forEach((store, orders) -> {
-            Integer orderCount = orders.size();
 
-            BigDecimal totalSales = orders.stream()
-                    .map(Order::getTotalAmount)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-            BigDecimal cardSales = orders.stream()
-                    .filter(o -> o.getPaymentMethod() == PaymentMethod.CARD)
-                    .map(Order::getTotalAmount)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-            BigDecimal cashSales = orders.stream()
-                    .filter(o -> o.getPaymentMethod() == PaymentMethod.CASH)
-                    .map(Order::getTotalAmount)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            SalesCalcResult result = calcSales(orderList);
 
             hourlyRepository.save(SalesStatsHourly.builder()
                     .store(store)
                     .statHour(LocalDateTime.now())
-                    .orderCount(orderCount)
-                    .totalSales(totalSales)
-                    .cardSales(cardSales)
-                    .cashSales(cashSales)
+                    .orderCount(result.count)
+                    .totalSales(result.total)
+                    .cardSales(result.card)
+                    .cashSales(result.cash)
                     .build());
         });
     }
@@ -69,34 +54,15 @@ public class SalesAggregationScheduler {
     @Scheduled(cron = "0 0 0 * * *")
     public void aggregateDaily() {
 
-        LocalDateTime yesterday = LocalDate.now().minusDays(1).atStartOfDay();
+        LocalDate yesterday = LocalDate.now().minusDays(1);
 
-        List<Order> orders = orderRepository.findAllAtBetween(yesterday, LocalDateTime.now());
-        // → sales_stats_daily에 저장
+        List<Order> orders = orderRepository.findAllByCreatedAtBetween(yesterday.atStartOfDay(), yesterday.atTime(23, 59, 59));
 
         Map<Store, List<Order>> groupByStore = orders.stream().collect(Collectors.groupingBy(Order::getStore));
 
         groupByStore.forEach((store, orderList) -> {
-            Integer orderCount = orderList.size();
 
-            BigDecimal totalSales = orderList.stream()
-                    .map(Order::getTotalAmount)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-            BigDecimal cardSales = orderList.stream()
-                    .filter(o -> o.getPaymentMethod() == PaymentMethod.CARD)
-                    .map(Order::getTotalAmount)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-            BigDecimal cashSales = orderList.stream()
-                    .filter(o -> o.getPaymentMethod() == PaymentMethod.CASH)
-                    .map(Order::getTotalAmount)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-            BigDecimal avgOrderPrice = totalSales.divide(
-                    BigDecimal.valueOf(orderCount),
-                    2,
-                    RoundingMode.HALF_UP);
+            SalesCalcResult result = calcSales(orderList);
 
             Integer peakHour = orderList.stream()
                     .collect(Collectors.groupingBy(
@@ -110,14 +76,29 @@ public class SalesAggregationScheduler {
 
             dailyRepository.save(SalesStatsDaily.builder()
                             .store(store)
-                            .statDate(LocalDate.now())
-                            .orderCount(orderCount)
-                            .totalSales(totalSales)
-                            .cardSales(cardSales)
-                            .cashSales(cashSales)
-                            .avgOrderPrice(avgOrderPrice)
+                            .statDate(LocalDate.now().minusDays(1))
+                            .orderCount(result.count)
+                            .totalSales(result.total)
+                            .cardSales(result.card)
+                            .cashSales(result.cash)
+                            .avgOrderPrice(result.avg)
                             .peakHour(peakHour)
                     .build());
         });
+    }
+
+    private record SalesCalcResult(BigDecimal total, BigDecimal card, BigDecimal cash,
+                                   Integer count, BigDecimal avg) {}
+
+    private SalesCalcResult calcSales(List<Order> orders) {
+        BigDecimal total = orders.stream().map(Order::getTotalAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal card = orders.stream()
+                .filter(o -> o.getPaymentMethod() == PaymentMethod.CARD)
+                .map(Order::getTotalAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+        Integer count = orders.size();
+        BigDecimal avg = count == 0 ? BigDecimal.ZERO
+                : total.divide(BigDecimal.valueOf(count), 2, RoundingMode.HALF_UP);
+        return new SalesCalcResult(total, card, total.subtract(card), count, avg);
     }
 }

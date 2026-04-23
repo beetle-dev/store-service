@@ -2,6 +2,9 @@ package com.cafe.storeservice.controller;
 
 import com.cafe.storeservice.common.response.CommonResponse;
 import com.cafe.storeservice.dto.*;
+import com.cafe.storeservice.service.InventoryService;
+import com.cafe.storeservice.service.OrderService;
+import com.cafe.storeservice.service.SalesQueryService;
 import com.cafe.storeservice.service.StoreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 public class StoreController {
 
     private final StoreService storeService;
+    private final InventoryService getInventory;
+    private final OrderService orderService;
+    private final SalesQueryService salesQueryService;
 
     @GetMapping
     public ResponseEntity<CommonResponse<?>> getStores(@Valid @ModelAttribute StoreSearchDto searchDto) {
@@ -37,40 +43,40 @@ public class StoreController {
     @GetMapping("/{id}/inventory")
     public ResponseEntity<CommonResponse<?>> getInventory(@PathVariable("id") Long id,
                                                           @ModelAttribute SearchDto searchDto) {
-        return ResponseEntity.ok(CommonResponse.ok(storeService.getInventory(id, searchDto)));
+        return ResponseEntity.ok(CommonResponse.ok(getInventory.getInventory(id, searchDto)));
     }
 
     @PostMapping("/{id}/inventory/adjust")
     public ResponseEntity<CommonResponse<?>> adjustInventory(@PathVariable("id") Long storeId,
                                                              @Valid @RequestBody InventoryReqDto reqDto) {
-        storeService.adjustInventory(storeId, reqDto);
+        getInventory.adjustInventory(storeId, reqDto);
         return ResponseEntity.ok(CommonResponse.ok());
     }
 
     @GetMapping("/{id}/inventory/logs")
     public ResponseEntity<CommonResponse<?>> getInventoryLogs(@PathVariable("id")Long storeId,
                                                               @ModelAttribute InventoryLogSearchDto searchDto) {
-        return ResponseEntity.ok(CommonResponse.ok(storeService.getInventoryLogs(storeId, searchDto)));
+        return ResponseEntity.ok(CommonResponse.ok(getInventory.getInventoryLogs(storeId, searchDto)));
     }
 
     @PostMapping("/{id}/orders")
     public ResponseEntity<CommonResponse<?>> registerOrder(@PathVariable("id") Long storeId,
                                                            @Valid @RequestBody OrderCreateReqDto orderCreateReqDto) {
-        storeService.registerOrder(storeId, orderCreateReqDto);
+        orderService.registerOrder(storeId, orderCreateReqDto);
         return ResponseEntity.ok(CommonResponse.ok());
     }
 
     @GetMapping("/{id}/orders")
     public ResponseEntity<CommonResponse<?>> getOrders(@PathVariable("id") Long storeId,
                                                        @ModelAttribute SearchDto searchDto) {
-        return ResponseEntity.ok(CommonResponse.ok(storeService.getOrders(storeId, searchDto)));
+        return ResponseEntity.ok(CommonResponse.ok(orderService.getOrders(storeId, searchDto)));
     }
 
     @PatchMapping("/{id}/orders/{orderId}/cancel")
     public ResponseEntity<CommonResponse<?>> updateOrder(@PathVariable("id") Long storeId,
                                                          @PathVariable("orderId") Long orderId,
                                                          @Valid @RequestBody OrderUpdateReqDto reqDto) {
-        storeService.updateOrder(storeId, orderId, reqDto);
+        orderService.updateOrder(storeId, orderId, reqDto);
 
         return ResponseEntity.ok(CommonResponse.ok());
     }
@@ -78,12 +84,12 @@ public class StoreController {
     @GetMapping("/{id}/sales/daily")
     public ResponseEntity<CommonResponse<?>> getSalesDailyHistory(@PathVariable("id") Long id,
                                                                   @ModelAttribute SalesHistorySearchDto searchDto) {
-        return ResponseEntity.ok(CommonResponse.ok(storeService.getSalesDailyHistory(id, searchDto)));
+        return ResponseEntity.ok(CommonResponse.ok(salesQueryService.getSalesDailyHistory(id, searchDto)));
     }
 
     @GetMapping("/{id}/sales/hourly")
     public ResponseEntity<CommonResponse<?>> getSalesHourlyHistory(@PathVariable("id") Long id,
                                                                   @ModelAttribute SalesHistorySearchDto searchDto) {
-        return ResponseEntity.ok(CommonResponse.ok(storeService.getSalesHourlyHistory(id, searchDto)));
+        return ResponseEntity.ok(CommonResponse.ok(salesQueryService.getSalesHourlyHistory(id, searchDto)));
     }
 }

@@ -5,10 +5,13 @@ import com.cafe.storeservice.domain.OrderItem;
 import com.cafe.storeservice.domain.PaymentMethod;
 import com.cafe.storeservice.domain.Status;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+@Getter
 @Builder
 public class OrderResDto {
     private Long id;

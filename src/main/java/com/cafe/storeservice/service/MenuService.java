@@ -47,7 +47,7 @@ public class MenuService {
                 .ifPresent(menus-> {throw new CustomException(ErrorCode.DUPLICATE_MENU_NAME);});
 
         MenuCategory menuCategory = menuCategoryRepository.findByName(reqDto.getMenuCategory())
-                 .orElse(null);
+                 .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
 
         if (reqDto.getImage() != null) {
             key = s3Service.upload(reqDto.getImage(), menuDirectory);
