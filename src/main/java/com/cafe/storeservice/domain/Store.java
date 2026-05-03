@@ -28,6 +28,8 @@ public class Store extends BaseEntity {
     @Column(length = 20)
     private String phone;
 
+    private String email;
+
     private LocalTime openTime;
     private LocalTime closeTime;
 
