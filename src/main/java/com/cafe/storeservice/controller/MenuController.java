@@ -5,6 +5,7 @@ import com.cafe.storeservice.dto.MenuCategoryReqDto;
 import com.cafe.storeservice.dto.MenuReqDto;
 import com.cafe.storeservice.dto.MenuResDto;
 import com.cafe.storeservice.dto.MenuSearchDto;
+import com.cafe.storeservice.dto.MenuCategoryResDto;
 import com.cafe.storeservice.service.MenuService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,11 @@ public class MenuController {
             @Valid @RequestBody MenuReqDto reqDto) {
         menuService.modified(id, reqDto);
         return ResponseEntity.ok(CommonResponse.ok());
+    }
+
+    @GetMapping("/categories")
+    public ResponseEntity<CommonResponse<?>> getCategories() {
+        return ResponseEntity.ok(CommonResponse.ok(menuService.getCategories()));
     }
 
     @PostMapping("/category")

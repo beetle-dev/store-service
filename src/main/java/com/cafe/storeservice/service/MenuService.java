@@ -6,6 +6,8 @@ import com.cafe.storeservice.common.exception.ErrorCode;
 import com.cafe.storeservice.common.response.PageResponse;
 import com.cafe.storeservice.domain.MenuCategory;
 import com.cafe.storeservice.dto.*;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import com.cafe.storeservice.domain.Menu;
 import com.cafe.storeservice.repository.MenuCategoryRepository;
 import com.cafe.storeservice.repository.MenuRepository;
@@ -80,6 +82,14 @@ public class MenuService {
         }
 
         menu.modified(reqDto, key);
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<MenuCategoryResDto> getCategories() {
+        return PageResponse.of(
+                menuCategoryRepository.findAll(PageRequest.of(0, 1000, Sort.by("sortOrder").ascending()))
+                        .map(MenuCategoryResDto::from)
+        );
     }
 
     public void registerCategory(MenuCategoryReqDto reqDto) {

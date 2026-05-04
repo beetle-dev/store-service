@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 public class MenuResDto {
     private Long id;
     private String menuCategory;
+    private Long menuCategoryId;
     private String name;
     private String description;
     private BigDecimal price;
@@ -22,6 +23,7 @@ public class MenuResDto {
         return MenuResDto.builder()
                 .id(menu.getId())
                 .menuCategory(menu.getMenuCategory() != null ? menu.getMenuCategory().getName() : null)
+                .menuCategoryId(menu.getMenuCategory() != null ? menu.getMenuCategory().getId() : null)
                 .name(menu.getName())
                 .description(menu.getDescription())
                 .price(menu.getPrice())

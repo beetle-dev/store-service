@@ -27,7 +27,7 @@ public class InventoryService {
     private final InventoryLogRepository inventoryLogRepository;
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "inventory:list", key = "#searchDto.toString()")
+    @Cacheable(value = "inventory:list", key = "#id + ':' + #searchDto.toString()")
     public PageResponse<StoreInventoryResDto> getInventory(Long id, SearchDto searchDto) {
 
         Page<StoreInventory> inventories = storeInventoryRepository.findAllByStoreId(id, SearchDto.toPageable(searchDto));
