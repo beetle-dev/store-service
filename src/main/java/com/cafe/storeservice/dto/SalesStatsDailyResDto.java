@@ -1,14 +1,8 @@
 package com.cafe.storeservice.dto;
 
 import com.cafe.storeservice.domain.SalesStatsDaily;
-import com.cafe.storeservice.domain.Store;
-import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

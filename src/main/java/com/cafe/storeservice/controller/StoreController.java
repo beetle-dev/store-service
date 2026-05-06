@@ -1,14 +1,19 @@
 package com.cafe.storeservice.controller;
 
 import com.cafe.storeservice.common.response.CommonResponse;
+import com.cafe.storeservice.domain.auth.Role;
 import com.cafe.storeservice.dto.*;
+import com.cafe.storeservice.dto.inventory.InventoryReqDto;
+import com.cafe.storeservice.dto.inventory.InventorySearchDto;
+import com.cafe.storeservice.dto.store.CreateStoreReqDto;
+import com.cafe.storeservice.dto.store.ModifyStoreReqDto;
+import com.cafe.storeservice.dto.store.StoreSearchDto;
 import com.cafe.storeservice.service.InventoryService;
 import com.cafe.storeservice.service.OrderService;
 import com.cafe.storeservice.service.SalesQueryService;
 import com.cafe.storeservice.service.StoreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,29 +33,37 @@ public class StoreController {
     }
 
     @PostMapping
-    public ResponseEntity<CommonResponse<?>> register(@Valid @RequestBody StoreReqDto reqDto) {
-        //todo 어드민 전용
-        storeService.register(reqDto);
+    public ResponseEntity<CommonResponse<?>> register(@Valid @RequestBody CreateStoreReqDto reqDto,
+                                                      @RequestHeader("X-User-Role") Role role) {
+        storeService.register(reqDto, role);
         return ResponseEntity.ok(CommonResponse.ok());
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<CommonResponse<?>> modify(@PathVariable("id") Long id,
-                                                    @Valid @RequestBody StoreReqDto reqDto) {
+                                                    @Valid @RequestBody ModifyStoreReqDto reqDto) {
         storeService.modify(id, reqDto);
+        return ResponseEntity.ok(CommonResponse.ok());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CommonResponse<?>> delete(@PathVariable("id") Long id,
+                                                    @RequestHeader("X-User-Role") Role role) {
+        storeService.delete(id, role);
         return ResponseEntity.ok(CommonResponse.ok());
     }
 
     @GetMapping("/{id}/inventory")
     public ResponseEntity<CommonResponse<?>> getInventory(@PathVariable("id") Long id,
-                                                          @ModelAttribute SearchDto searchDto) {
+                                                          @ModelAttribute InventorySearchDto searchDto) {
         return ResponseEntity.ok(CommonResponse.ok(getInventory.getInventory(id, searchDto)));
     }
 
     @PostMapping("/{id}/inventory/adjust")
     public ResponseEntity<CommonResponse<?>> adjustInventory(@PathVariable("id") Long storeId,
-                                                             @Valid @RequestBody InventoryReqDto reqDto) {
-        getInventory.adjustInventory(storeId, reqDto);
+                                                             @Valid @RequestBody InventoryReqDto reqDto,
+                                                             @RequestHeader("X-User-Id") String uuid) {
+        getInventory.adjustInventory(storeId, reqDto, uuid);
         return ResponseEntity.ok(CommonResponse.ok());
     }
 

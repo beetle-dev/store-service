@@ -1,12 +1,12 @@
-package com.cafe.storeservice.domain;
+package com.cafe.storeservice.domain.inventory;
 
-import com.cafe.storeservice.dto.InventoryReqDto;
+import com.cafe.storeservice.domain.BaseEntity;
+import com.cafe.storeservice.domain.Ingredient;
+import com.cafe.storeservice.domain.store.Store;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Getter
 @Entity

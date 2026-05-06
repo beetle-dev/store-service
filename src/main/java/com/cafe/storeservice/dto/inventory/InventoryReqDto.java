@@ -1,4 +1,4 @@
-package com.cafe.storeservice.dto;
+package com.cafe.storeservice.dto.inventory;
 
 import com.cafe.storeservice.domain.ChangeType;
 import jakarta.validation.constraints.NotNull;

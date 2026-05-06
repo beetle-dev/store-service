@@ -7,8 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class InventoryLogSearchDto extends SearchDto {
-    private Long storeId;
-    private Long ingredientId;
+    private String ingredientName;
     private ChangeType changeType;
-    private Long performedBy;
 }

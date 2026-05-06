@@ -1,15 +1,20 @@
-package com.cafe.storeservice.dto;
+package com.cafe.storeservice.dto.inventory;
 
-import com.cafe.storeservice.domain.StoreInventory;
+import com.cafe.storeservice.domain.inventory.StoreInventory;
+import jakarta.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Builder
 @Getter
-public class StoreInventoryResDto {
+@AllArgsConstructor
+@NoArgsConstructor
+public class InventoryResDto {
     private Long id;
     private Long ingredientId;
     private String ingredientName;
@@ -19,8 +24,8 @@ public class StoreInventoryResDto {
     private LocalDateTime updatedAt;
     private Boolean isLow;
 
-    public static StoreInventoryResDto from(StoreInventory storeInventory) {
-        return StoreInventoryResDto.builder()
+    public static InventoryResDto from(StoreInventory storeInventory) {
+        return InventoryResDto.builder()
                 .id(storeInventory.getId())
                 .ingredientId(storeInventory.getIngredient().getId())
                 .ingredientName(storeInventory.getIngredient().getName())

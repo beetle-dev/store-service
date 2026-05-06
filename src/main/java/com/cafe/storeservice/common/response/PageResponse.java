@@ -1,15 +1,17 @@
 package com.cafe.storeservice.common.response;
 
-import com.cafe.storeservice.domain.Order;
-import com.cafe.storeservice.dto.OrderResDto;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PageResponse<T> {
 
     private List<T> content;

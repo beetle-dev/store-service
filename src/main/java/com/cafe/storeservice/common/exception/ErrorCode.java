@@ -18,7 +18,8 @@ public enum ErrorCode {
     DUPLICATE_MENU_NAME("S008", "이미 존재하는 메뉴 이름입니다.", HttpStatus.CONFLICT),
     INSUFFICIENT_STOCK("S009", "재고가 부족합니다.", HttpStatus.UNPROCESSABLE_ENTITY),
     DUPLICATE_CATEGORY_NAME("S010", "이미 존재하는 카테고리 이름입니다.", HttpStatus.CONFLICT),
-    INTERNAL_SERVER_ERROR("S011", "S3 파일 삭제 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+    INTERNAL_SERVER_ERROR("S011", "S3 파일 삭제 실패", HttpStatus.INTERNAL_SERVER_ERROR),
+    FORBIDDEN("S012", "해당 권한이 없습니다.", HttpStatus.FORBIDDEN);
 
     private final String code;
     private final String message;

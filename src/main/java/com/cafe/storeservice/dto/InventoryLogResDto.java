@@ -1,9 +1,7 @@
 package com.cafe.storeservice.dto;
 
 import com.cafe.storeservice.domain.ChangeType;
-import com.cafe.storeservice.domain.Ingredient;
 import com.cafe.storeservice.domain.InventoryLog;
-import com.cafe.storeservice.domain.Store;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -21,7 +19,7 @@ public class InventoryLogResDto {
     private BigDecimal quantity;
     private BigDecimal stockAfter;
     private String note;
-    private Long performedBy;
+    private String performedBy;
     private LocalDateTime createdAt;
 
     public static InventoryLogResDto from(InventoryLog inventoryLog) {

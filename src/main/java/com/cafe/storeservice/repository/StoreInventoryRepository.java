@@ -1,14 +1,15 @@
 package com.cafe.storeservice.repository;
 
-import com.cafe.storeservice.domain.StoreInventory;
+import com.cafe.storeservice.domain.inventory.StoreInventory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
 public interface StoreInventoryRepository extends JpaRepository<StoreInventory, Long> {
-    Page<StoreInventory> findAllByStoreId(Long id, Pageable pageable);
-
     Optional<StoreInventory> findByStoreIdAndIngredientId(Long storeId, Long ingredientId);
+
+    Page<StoreInventory> findAll(Specification<StoreInventory> search, Pageable pageable);
 }

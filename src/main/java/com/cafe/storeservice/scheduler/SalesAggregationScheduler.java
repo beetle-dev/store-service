@@ -1,6 +1,7 @@
 package com.cafe.storeservice.scheduler;
 
 import com.cafe.storeservice.domain.*;
+import com.cafe.storeservice.domain.store.Store;
 import com.cafe.storeservice.repository.OrderRepository;
 import com.cafe.storeservice.repository.SalesStatsDailyRepository;
 import com.cafe.storeservice.repository.SalesStatsHourlyRepository;

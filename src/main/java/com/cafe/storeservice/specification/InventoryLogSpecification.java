@@ -8,12 +8,11 @@ public class InventoryLogSpecification {
 
     public InventoryLogSpecification (){}
 
-    public static Specification<InventoryLog> search(InventoryLogSearchDto dto) {
+    public static Specification<InventoryLog> search(Long storeId, InventoryLogSearchDto dto) {
         return Specification.allOf(
-                storeIdEquals(dto.getStoreId()),
-                ingredientEquals(dto.getIngredientId()),
-                changeTypeEquals(dto.getChangeType()),
-                performedByEquals(dto.getPerformedBy())
+                storeIdEquals(storeId),
+                ingredientEquals(dto.getIngredientName()),
+                changeTypeEquals(dto.getChangeType())
         );
     }
 
@@ -24,10 +23,10 @@ public class InventoryLogSpecification {
                         : null;
     }
 
-    public static Specification<InventoryLog> ingredientEquals(Long ingredientId) {
+    public static Specification<InventoryLog> ingredientEquals(String ingredientName) {
         return (root, query, cb) ->
-                ingredientId != null
-                        ? cb.equal(root.get("ingredient").get("id"), ingredientId)
+                ingredientName != null
+                        ? cb.like(root.get("ingredient").get("name"), "%" + ingredientName + "%")
                         : null;
     }
 
@@ -35,13 +34,6 @@ public class InventoryLogSpecification {
         return (root, query, cb) ->
                 changeType != null
                         ? cb.equal(root.get("changeType"), changeType)
-                        : null;
-    }
-
-    private static Specification<InventoryLog> performedByEquals(Long performedBy) {
-        return (root, query, cb) ->
-                performedBy != null
-                        ? cb.equal(root.get("performedBy"), performedBy)
                         : null;
     }
 }

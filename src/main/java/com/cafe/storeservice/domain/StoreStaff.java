@@ -1,5 +1,6 @@
 package com.cafe.storeservice.domain;
 
+import com.cafe.storeservice.domain.store.Store;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

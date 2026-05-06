@@ -1,5 +1,6 @@
 package com.cafe.storeservice.domain;
 
+import com.cafe.storeservice.domain.store.Store;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -40,7 +41,7 @@ public class InventoryLog {
     @Column(columnDefinition = "TEXT")
     private String note;
 
-    private Long performedBy;
+    private String performedBy;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

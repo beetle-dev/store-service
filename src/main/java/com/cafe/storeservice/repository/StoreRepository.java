@@ -1,6 +1,6 @@
 package com.cafe.storeservice.repository;
 
-import com.cafe.storeservice.domain.Store;
+import com.cafe.storeservice.domain.store.Store;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

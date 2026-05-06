@@ -1,11 +1,10 @@
 package com.cafe.storeservice.domain;
 
+import com.cafe.storeservice.domain.store.Store;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Getter
 @Table(name = "orders")
