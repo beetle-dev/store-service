@@ -2,10 +2,14 @@ package com.cafe.storeservice.controller;
 
 import com.cafe.storeservice.common.response.CommonResponse;
 import com.cafe.storeservice.domain.auth.Role;
-import com.cafe.storeservice.dto.*;
+import com.cafe.storeservice.dto.history.SalesHistorySearchDto;
+import com.cafe.storeservice.dto.inventory.InventoryLogSearchDto;
 import com.cafe.storeservice.dto.inventory.InventoryReqDto;
 import com.cafe.storeservice.dto.inventory.InventorySearchDto;
-import com.cafe.storeservice.dto.store.CreateStoreReqDto;
+import com.cafe.storeservice.dto.order.OrderCreateReqDto;
+import com.cafe.storeservice.dto.order.OrderSearchDto;
+import com.cafe.storeservice.dto.order.OrderUpdateReqDto;
+import com.cafe.storeservice.dto.store.StoreCreateReqDto;
 import com.cafe.storeservice.dto.store.ModifyStoreReqDto;
 import com.cafe.storeservice.dto.store.StoreSearchDto;
 import com.cafe.storeservice.service.InventoryService;
@@ -23,7 +27,7 @@ import org.springframework.web.bind.annotation.*;
 public class StoreController {
 
     private final StoreService storeService;
-    private final InventoryService getInventory;
+    private final InventoryService inventoryService;
     private final OrderService orderService;
     private final SalesQueryService salesQueryService;
 
@@ -33,7 +37,7 @@ public class StoreController {
     }
 
     @PostMapping
-    public ResponseEntity<CommonResponse<?>> register(@Valid @RequestBody CreateStoreReqDto reqDto,
+    public ResponseEntity<CommonResponse<?>> register(@Valid @RequestBody StoreCreateReqDto reqDto,
                                                       @RequestHeader("X-User-Role") Role role) {
         storeService.register(reqDto, role);
         return ResponseEntity.ok(CommonResponse.ok());
@@ -56,21 +60,21 @@ public class StoreController {
     @GetMapping("/{id}/inventory")
     public ResponseEntity<CommonResponse<?>> getInventory(@PathVariable("id") Long id,
                                                           @ModelAttribute InventorySearchDto searchDto) {
-        return ResponseEntity.ok(CommonResponse.ok(getInventory.getInventory(id, searchDto)));
+        return ResponseEntity.ok(CommonResponse.ok(inventoryService.getInventory(id, searchDto)));
     }
 
     @PostMapping("/{id}/inventory/adjust")
     public ResponseEntity<CommonResponse<?>> adjustInventory(@PathVariable("id") Long storeId,
                                                              @Valid @RequestBody InventoryReqDto reqDto,
                                                              @RequestHeader("X-User-Id") String uuid) {
-        getInventory.adjustInventory(storeId, reqDto, uuid);
+        inventoryService.adjustInventory(storeId, reqDto, uuid);
         return ResponseEntity.ok(CommonResponse.ok());
     }
 
     @GetMapping("/{id}/inventory/logs")
     public ResponseEntity<CommonResponse<?>> getInventoryLogs(@PathVariable("id")Long storeId,
                                                               @ModelAttribute InventoryLogSearchDto searchDto) {
-        return ResponseEntity.ok(CommonResponse.ok(getInventory.getInventoryLogs(storeId, searchDto)));
+        return ResponseEntity.ok(CommonResponse.ok(inventoryService.getInventoryLogs(storeId, searchDto)));
     }
 
     @PostMapping("/{id}/orders")
@@ -82,7 +86,7 @@ public class StoreController {
 
     @GetMapping("/{id}/orders")
     public ResponseEntity<CommonResponse<?>> getOrders(@PathVariable("id") Long storeId,
-                                                       @ModelAttribute SearchDto searchDto) {
+                                                       @ModelAttribute OrderSearchDto searchDto) {
         return ResponseEntity.ok(CommonResponse.ok(orderService.getOrders(storeId, searchDto)));
     }
 

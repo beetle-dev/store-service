@@ -1,6 +1,7 @@
 package com.cafe.storeservice.scheduler;
 
 import com.cafe.storeservice.domain.*;
+import com.cafe.storeservice.domain.order.Order;
 import com.cafe.storeservice.domain.store.Store;
 import com.cafe.storeservice.repository.OrderRepository;
 import com.cafe.storeservice.repository.SalesStatsDailyRepository;
@@ -8,6 +9,7 @@ import com.cafe.storeservice.repository.SalesStatsHourlyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -26,10 +28,10 @@ public class SalesAggregationScheduler {
     private final SalesStatsHourlyRepository hourlyRepository;
     private final SalesStatsDailyRepository dailyRepository;
 
+    @Transactional
     @Scheduled(cron = "0 0 * * * *")
     public void aggregateHourly() {
-        LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1)
-                .truncatedTo(ChronoUnit.HOURS);
+        LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1).truncatedTo(ChronoUnit.HOURS);
         LocalDateTime now = LocalDateTime.now()
                 .truncatedTo(ChronoUnit.HOURS);
 
@@ -52,6 +54,7 @@ public class SalesAggregationScheduler {
         });
     }
 
+    @Transactional
     @Scheduled(cron = "0 0 0 * * *")
     public void aggregateDaily() {
 

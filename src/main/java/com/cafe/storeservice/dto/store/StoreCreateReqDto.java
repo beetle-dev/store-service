@@ -9,7 +9,7 @@ import lombok.Getter;
 import java.time.LocalTime;
 
 @Getter
-public class CreateStoreReqDto {
+public class StoreCreateReqDto {
 
     @NotEmpty
     private String name;

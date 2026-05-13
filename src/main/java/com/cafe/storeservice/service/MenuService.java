@@ -6,6 +6,7 @@ import com.cafe.storeservice.common.exception.ErrorCode;
 import com.cafe.storeservice.common.response.PageResponse;
 import com.cafe.storeservice.domain.MenuCategory;
 import com.cafe.storeservice.dto.*;
+import com.cafe.storeservice.dto.menu.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import com.cafe.storeservice.domain.Menu;
@@ -19,6 +20,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -44,47 +47,62 @@ public class MenuService {
         }));
     }
 
-    @Transactional
+    public void register(MenuCreateReqDto reqDto) {
+        String key = reqDto.getImage() != null?
+                s3Service.upload(reqDto.getImage(), menuDirectory):
+                null;
+
+        try {
+            saveMenu(reqDto, key);
+        } catch (Exception e) {
+            if (key != null) s3Service.delete(key);
+            throw new CustomException(ErrorCode.REGISTER_FAIL);
+        }
+    }
+
     @CacheEvict(value = "menu:list", allEntries = true)
-    public void register(MenuReqDto reqDto) {
-        String key = null;
+    public void saveMenu(MenuCreateReqDto reqDto, String key) {
 
         menuRepository.findByName(reqDto.getName())
                 .ifPresent(menus-> {throw new CustomException(ErrorCode.DUPLICATE_MENU_NAME);});
 
-        MenuCategory menuCategory = menuCategoryRepository.findByName(reqDto.getMenuCategory())
-                 .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
-
-        if (reqDto.getImage() != null) {
-            key = s3Service.upload(reqDto.getImage(), menuDirectory);
-        }
+        MenuCategory menuCategory = menuCategoryRepository.findById(reqDto.getMenuCategoryId())
+                .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
 
         menuRepository.save(Menu.builder()
-                         .menuCategory(menuCategory)
-                         .name(reqDto.getName())
-                         .description(reqDto.getDescription())
-                         .price(reqDto.getPrice())
-                         .cost(reqDto.getCost())
-                         .imageUrl(key)
-                 .build());
+                .menuCategory(menuCategory)
+                .name(reqDto.getName())
+                .description(reqDto.getDescription())
+                .price(reqDto.getPrice())
+                .cost(reqDto.getCost())
+                .imageUrl(key)
+                .build());
     }
 
     @Transactional
     @CacheEvict(value = "menu:list", allEntries = true)
-    public void modified(Long id, MenuReqDto reqDto) {
+    public void modified(Long id, MenuModifyReqDto reqDto) {
+        Long menuCategoryId = reqDto.getMenuCategoryId();
+        MenuCategory menuCategory = null;
         String key = null;
 
         Menu menu = menuRepository.findById(id)
                 .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
 
+        if (menuCategoryId != null) {
+            menuCategory = menuCategoryRepository.findById(reqDto.getMenuCategoryId())
+                    .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
+        }
+
         if (reqDto.getImage() != null) {
             key = s3Service.upload(reqDto.getImage(), menuDirectory);
         }
 
-        menu.modified(reqDto, key);
+        menu.modified(reqDto, menuCategory, key);
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "menu-category:list")
     public PageResponse<MenuCategoryResDto> getCategories() {
         return PageResponse.of(
                 menuCategoryRepository.findAll(PageRequest.of(0, 1000, Sort.by("sortOrder").ascending()))
@@ -92,6 +110,8 @@ public class MenuService {
         );
     }
 
+    @Transactional
+    @CacheEvict(value = "menu-category:list", allEntries = true)
     public void registerCategory(MenuCategoryReqDto reqDto) {
 
         menuCategoryRepository.findByName(reqDto.getName())
@@ -104,7 +124,13 @@ public class MenuService {
         menuCategoryRepository.save(builder.build());
     }
 
+    @Transactional(readOnly = true)
     public Menu findById(Long menuId) {
         return menuRepository.findById(menuId).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public List<Menu> findAllBy(List<Long> menuIdList) {
+        return menuRepository.findAllById(menuIdList);
     }
 }

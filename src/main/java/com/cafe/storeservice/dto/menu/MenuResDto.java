@@ -1,4 +1,4 @@
-package com.cafe.storeservice.dto;
+package com.cafe.storeservice.dto.menu;
 
 import com.cafe.storeservice.domain.Menu;
 import lombok.Builder;

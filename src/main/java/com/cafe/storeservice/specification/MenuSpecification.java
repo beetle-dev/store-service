@@ -1,8 +1,7 @@
 package com.cafe.storeservice.specification;
 
-import com.cafe.storeservice.domain.MenuCategory;
 import com.cafe.storeservice.domain.Menu;
-import com.cafe.storeservice.dto.MenuSearchDto;
+import com.cafe.storeservice.dto.menu.MenuSearchDto;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 

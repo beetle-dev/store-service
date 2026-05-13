@@ -1,11 +1,10 @@
 package com.cafe.storeservice.controller;
 
 import com.cafe.storeservice.common.response.CommonResponse;
-import com.cafe.storeservice.dto.MenuCategoryReqDto;
-import com.cafe.storeservice.dto.MenuReqDto;
-import com.cafe.storeservice.dto.MenuResDto;
-import com.cafe.storeservice.dto.MenuSearchDto;
-import com.cafe.storeservice.dto.MenuCategoryResDto;
+import com.cafe.storeservice.dto.menu.MenuCategoryReqDto;
+import com.cafe.storeservice.dto.menu.MenuCreateReqDto;
+import com.cafe.storeservice.dto.menu.MenuModifyReqDto;
+import com.cafe.storeservice.dto.menu.MenuSearchDto;
 import com.cafe.storeservice.service.MenuService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,7 @@ public class MenuController {
     }
 
     @PostMapping
-    public ResponseEntity<CommonResponse<?>> register(@Valid @ModelAttribute MenuReqDto reqDto) {
+    public ResponseEntity<CommonResponse<?>> register(@Valid @ModelAttribute MenuCreateReqDto reqDto) {
         menuService.register(reqDto);
         return ResponseEntity.ok(CommonResponse.ok());
     }
@@ -33,7 +32,7 @@ public class MenuController {
     @PatchMapping("/{id}")
     public ResponseEntity<CommonResponse<?>> modified(
             @PathVariable("id") Long id,
-            @Valid @RequestBody MenuReqDto reqDto) {
+            @Valid @RequestBody MenuModifyReqDto reqDto) {
         menuService.modified(id, reqDto);
         return ResponseEntity.ok(CommonResponse.ok());
     }

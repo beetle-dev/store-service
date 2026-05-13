@@ -1,4 +1,4 @@
-package com.cafe.storeservice.dto;
+package com.cafe.storeservice.dto.order;
 
 import com.cafe.storeservice.domain.Status;
 import lombok.Getter;

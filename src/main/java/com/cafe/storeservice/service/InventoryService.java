@@ -5,10 +5,9 @@ import com.cafe.storeservice.common.exception.ErrorCode;
 import com.cafe.storeservice.common.response.PageResponse;
 import com.cafe.storeservice.domain.InventoryLog;
 import com.cafe.storeservice.domain.inventory.StoreInventory;
+import com.cafe.storeservice.domain.store.Store;
 import com.cafe.storeservice.dto.*;
-import com.cafe.storeservice.dto.inventory.InventoryReqDto;
-import com.cafe.storeservice.dto.inventory.InventoryResDto;
-import com.cafe.storeservice.dto.inventory.InventorySearchDto;
+import com.cafe.storeservice.dto.inventory.*;
 import com.cafe.storeservice.repository.InventoryLogRepository;
 import com.cafe.storeservice.repository.StoreInventoryRepository;
 import com.cafe.storeservice.specification.InventoryLogSpecification;
@@ -35,7 +34,9 @@ public class InventoryService {
     @Cacheable(value = "inventory:list", key = "#id + ':' + #searchDto.toString()")
     public PageResponse<InventoryResDto> getInventory(Long id, InventorySearchDto searchDto) {
 
-        Page<StoreInventory> inventories = storeInventoryRepository.findAll(InventorySpecification.search(id, searchDto), SearchDto.toPageable(searchDto));
+        Store store = storeService.findById(id);
+
+        Page<StoreInventory> inventories = storeInventoryRepository.findAll(InventorySpecification.search(store, searchDto), SearchDto.toPageable(searchDto));
 
         return PageResponse.of(inventories.map(InventoryResDto::from));
     }

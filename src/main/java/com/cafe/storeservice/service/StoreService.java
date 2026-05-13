@@ -6,7 +6,7 @@ import com.cafe.storeservice.common.response.PageResponse;
 import com.cafe.storeservice.domain.auth.Role;
 import com.cafe.storeservice.domain.store.Store;
 import com.cafe.storeservice.dto.*;
-import com.cafe.storeservice.dto.store.CreateStoreReqDto;
+import com.cafe.storeservice.dto.store.StoreCreateReqDto;
 import com.cafe.storeservice.dto.store.ModifyStoreReqDto;
 import com.cafe.storeservice.dto.store.StoreResDto;
 import com.cafe.storeservice.dto.store.StoreSearchDto;
@@ -36,7 +36,7 @@ public class StoreService {
 
     @Transactional
     @CacheEvict(value = "store:list", allEntries = true)
-    public void register(CreateStoreReqDto reqDto,
+    public void register(StoreCreateReqDto reqDto,
                          Role role) {
 
         if (role != Role.ADMIN) {

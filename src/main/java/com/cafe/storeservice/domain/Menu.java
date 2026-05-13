@@ -1,6 +1,7 @@
 package com.cafe.storeservice.domain;
 
-import com.cafe.storeservice.dto.MenuReqDto;
+import com.cafe.storeservice.dto.menu.MenuCreateReqDto;
+import com.cafe.storeservice.dto.menu.MenuModifyReqDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.util.StringUtils;
@@ -42,10 +43,13 @@ public class Menu extends BaseEntity {
     @Column(length = 500)
     private String imageUrl;
 
-    public void modified(MenuReqDto reqDto, String key) {
+    public void modified(MenuModifyReqDto reqDto, MenuCategory menuCategory, String key) {
+        if (menuCategory != null) this.menuCategory = menuCategory;
+        if (StringUtils.hasText(reqDto.getName())) this.name = reqDto.getName();
         if (reqDto.getPrice() != null) this.price = reqDto.getPrice();
         if (StringUtils.hasText(reqDto.getDescription())) this.description = reqDto.getDescription();
-        if (reqDto.getIsActive() != null) this.isActive = reqDto.getIsActive();
+        if (reqDto.getCost() != null) this.cost = reqDto.getCost();
         if (StringUtils.hasText(key)) this.imageUrl = key;
+        if (reqDto.getIsActive() != null) this.isActive = reqDto.getIsActive();
     }
 }

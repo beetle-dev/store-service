@@ -1,5 +1,6 @@
-package com.cafe.storeservice.dto;
+package com.cafe.storeservice.dto.history;
 
+import com.cafe.storeservice.dto.SearchDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;

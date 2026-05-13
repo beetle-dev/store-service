@@ -1,12 +1,10 @@
-package com.cafe.storeservice.dto;
+package com.cafe.storeservice.dto.order;
 
-import com.cafe.storeservice.domain.Order;
-import com.cafe.storeservice.domain.OrderItem;
+import com.cafe.storeservice.domain.order.Order;
 import com.cafe.storeservice.domain.PaymentMethod;
 import com.cafe.storeservice.domain.Status;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;

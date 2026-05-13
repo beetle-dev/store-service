@@ -16,3 +16,24 @@ spring:
       ddl-auto: validate
     show-sql: false
     open-in-view: false
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+
+cloud:
+  aws:
+    s3:
+      bucket: store-service-s3-bucket
+    kms:
+      key-arn: arn:aws:kms:ap-northeast-2:322533971309:key/7d04c5d4-322c-48a0-ad51-9f73934b503d
+    region:
+      static: ap-northeast-2
+    directory:
+      menu: menu
+
+logging:
+  level:
+    org.springframework.cache: TRACE
+    org.springframework.data.redis: DEBUG

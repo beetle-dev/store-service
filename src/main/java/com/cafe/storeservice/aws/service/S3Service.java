@@ -58,7 +58,7 @@ public class S3Service {
             s3Client.deleteObject(b -> b.bucket(bucket).key(key));
         } catch (Exception e) {
             log.error("S3 파일 삭제 실패: {}", key, e);
-            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+            throw new CustomException(ErrorCode.S3_DELETE_FAILED);
         }
     }
 

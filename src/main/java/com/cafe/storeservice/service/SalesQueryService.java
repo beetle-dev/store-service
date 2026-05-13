@@ -1,13 +1,11 @@
 package com.cafe.storeservice.service;
 
-import com.cafe.storeservice.common.exception.CustomException;
-import com.cafe.storeservice.common.exception.ErrorCode;
 import com.cafe.storeservice.common.response.PageResponse;
 import com.cafe.storeservice.domain.SalesStatsDaily;
 import com.cafe.storeservice.domain.SalesStatsHourly;
-import com.cafe.storeservice.dto.SalesHistorySearchDto;
-import com.cafe.storeservice.dto.SalesStatsDailyResDto;
-import com.cafe.storeservice.dto.SalesStatsHourlyResDto;
+import com.cafe.storeservice.dto.history.SalesHistorySearchDto;
+import com.cafe.storeservice.dto.history.SalesStatsDailyResDto;
+import com.cafe.storeservice.dto.history.SalesStatsHourlyResDto;
 import com.cafe.storeservice.dto.SearchDto;
 import com.cafe.storeservice.repository.SalesStatsDailyRepository;
 import com.cafe.storeservice.repository.SalesStatsHourlyRepository;
@@ -45,7 +43,7 @@ public class SalesQueryService {
 
     @Transactional(readOnly = true)
     @Cacheable(value = "sales:hourly", key = "#id + ':' + #searchDto.toString()")
-    public Object getSalesHourlyHistory(Long id, SalesHistorySearchDto searchDto) {
+    public PageResponse<SalesStatsHourlyResDto> getSalesHourlyHistory(Long id, SalesHistorySearchDto searchDto) {
 
         storeService.findById(id);
 

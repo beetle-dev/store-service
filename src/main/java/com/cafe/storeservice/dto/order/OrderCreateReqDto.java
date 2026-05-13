@@ -1,10 +1,10 @@
-package com.cafe.storeservice.dto;
+package com.cafe.storeservice.dto.order;
 
 import com.cafe.storeservice.domain.PaymentMethod;
+import com.cafe.storeservice.dto.order.OrderItemReqDto;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 
 import java.math.BigDecimal;

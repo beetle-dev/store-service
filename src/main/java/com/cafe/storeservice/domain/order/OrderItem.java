@@ -1,5 +1,6 @@
-package com.cafe.storeservice.domain;
+package com.cafe.storeservice.domain.order;
 
+import com.cafe.storeservice.domain.Menu;
 import jakarta.persistence.*;
 import lombok.*;
 

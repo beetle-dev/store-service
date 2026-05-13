@@ -1,4 +1,4 @@
-package com.cafe.storeservice.dto;
+package com.cafe.storeservice.dto.menu;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;

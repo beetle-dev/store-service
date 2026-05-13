@@ -1,6 +1,6 @@
-package com.cafe.storeservice.dto;
+package com.cafe.storeservice.dto.order;
 
-import com.cafe.storeservice.domain.OrderItem;
+import com.cafe.storeservice.domain.order.OrderItem;
 import lombok.Builder;
 import lombok.Getter;
 

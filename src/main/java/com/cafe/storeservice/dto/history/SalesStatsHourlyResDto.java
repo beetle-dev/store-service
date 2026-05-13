@@ -1,4 +1,4 @@
-package com.cafe.storeservice.dto;
+package com.cafe.storeservice.dto.history;
 
 import com.cafe.storeservice.domain.SalesStatsHourly;
 import lombok.Builder;

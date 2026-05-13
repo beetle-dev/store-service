@@ -14,6 +14,8 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -21,16 +23,17 @@ import java.util.Map;
 
 @Configuration
 @EnableCaching
+@EnableScheduling
 public class RedisConfig {
 
     @Bean
-    public CacheManager cacheManager(RedisConnectionFactory connectionFactory) {
+    public CacheManager cacheManager(RedisConnectionFactory connectionFactory) { // todo 스터디 필요
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         objectMapper.activateDefaultTyping(
-                objectMapper.getPolymorphicTypeValidator(),
+                objectMapper.getPolymorphicTypeValidator(), // todo?? 어떤 클래스를 허용할 것인지에 대한 정보 필요 없나?(validation 기준 필요)
                 ObjectMapper.DefaultTyping.NON_FINAL,
                 JsonTypeInfo.As.PROPERTY);
 
@@ -47,23 +50,18 @@ public class RedisConfig {
 
         Map<String, RedisCacheConfiguration> cacheConfigs = new HashMap<>();
 
-        cacheConfigs.put("store:list",
-                defaultConfig.entryTtl(Duration.ofMinutes(10)));
+        cacheConfigs.put("store:list", defaultConfig);
 
         cacheConfigs.put("menu:list",
                 defaultConfig.entryTtl(Duration.ofMinutes(10)));
+
+        cacheConfigs.put("menu-category:list", defaultConfig);
 
         cacheConfigs.put("inventory:list",
                 defaultConfig.entryTtl(Duration.ofMinutes(5)));
 
         cacheConfigs.put("dashboard",
                 defaultConfig.entryTtl(Duration.ofMinutes(3)));
-
-        cacheConfigs.put("sales:hourly",
-                defaultConfig.entryTtl(Duration.ofMinutes(30)));
-
-        cacheConfigs.put("sales:daily",
-                defaultConfig.entryTtl(Duration.ofHours(1)));
 
         return RedisCacheManager.builder(connectionFactory)
                 .cacheDefaults(defaultConfig)

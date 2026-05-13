@@ -1,10 +1,9 @@
 package com.cafe.storeservice.repository;
 
-import com.cafe.storeservice.domain.Order;
-import com.cafe.storeservice.domain.OrderItem;
+import com.cafe.storeservice.domain.order.Order;
+import com.cafe.storeservice.domain.order.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Arrays;
 import java.util.List;
 
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {

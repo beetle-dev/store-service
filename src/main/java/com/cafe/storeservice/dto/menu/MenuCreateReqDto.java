@@ -1,6 +1,5 @@
-package com.cafe.storeservice.dto;
+package com.cafe.storeservice.dto.menu;
 
-import com.cafe.storeservice.domain.MenuCategory;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -11,19 +10,18 @@ import java.math.BigDecimal;
 
 @Setter
 @Getter
-public class MenuReqDto {
-    private String menuCategory;
+public class MenuCreateReqDto {
+    @NotNull
+    private Long menuCategoryId;
 
     @NotEmpty
     private String name;
 
-    private String description;
-
     @NotNull
     private BigDecimal price;
+
+    private String description;
     private BigDecimal cost;
     private MultipartFile image;
     private Boolean isActive;
-
-    private MenuCategory menuCategoryEntity;
 }

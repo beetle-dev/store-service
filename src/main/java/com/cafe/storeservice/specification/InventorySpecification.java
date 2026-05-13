@@ -1,6 +1,7 @@
 package com.cafe.storeservice.specification;
 
 import com.cafe.storeservice.domain.inventory.StoreInventory;
+import com.cafe.storeservice.domain.store.Store;
 import com.cafe.storeservice.dto.inventory.InventorySearchDto;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
@@ -9,9 +10,9 @@ import org.springframework.util.StringUtils;
 @NoArgsConstructor
 public class InventorySpecification {
 
-    public static Specification<StoreInventory> search(Long id, InventorySearchDto searchDto) {
+    public static Specification<StoreInventory> search(Store store, InventorySearchDto searchDto) {
         return Specification.allOf(
-                storeIdEquals(id),
+                storeEquals(store),
                 ingredientContains(searchDto.getIngredientName()),
                 lowIsEquals(searchDto.getLow())
         );
@@ -32,7 +33,7 @@ public class InventorySpecification {
                         : null;
     }
 
-    private static Specification<StoreInventory> storeIdEquals(Long id) {
-        return (root, query, cb) -> cb.equal(root.get("store").get("id"), id);
+    private static Specification<StoreInventory> storeEquals(Store store) {
+        return (root, query, cb) -> cb.equal(root.get("store"), store);
     }
 }

@@ -4,12 +4,15 @@ import com.cafe.storeservice.common.exception.CustomException;
 import com.cafe.storeservice.common.exception.ErrorCode;
 import com.cafe.storeservice.common.response.PageResponse;
 import com.cafe.storeservice.domain.Menu;
-import com.cafe.storeservice.domain.Order;
-import com.cafe.storeservice.domain.OrderItem;
+import com.cafe.storeservice.domain.Status;
+import com.cafe.storeservice.domain.order.Order;
+import com.cafe.storeservice.domain.order.OrderItem;
+import com.cafe.storeservice.domain.store.Store;
 import com.cafe.storeservice.dto.*;
+import com.cafe.storeservice.dto.order.*;
 import com.cafe.storeservice.repository.OrderItemRepository;
 import com.cafe.storeservice.repository.OrderRepository;
-import com.cafe.storeservice.repository.StoreRepository;
+import com.cafe.storeservice.specification.OrderSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.cafe.storeservice.common.exception.ErrorCode.VALIDATION_FAILED;
 
 @Service
 @RequiredArgsConstructor
@@ -43,36 +48,44 @@ public class OrderService {
                 .build());
 
         List<OrderItemReqDto> orderItemReqDtoList = orderCreateReqDto.getOrderItemReqDtos();
-        orderItemReqDtoList.forEach(dto -> {
-            Menu menu = menuService.findById(dto.getMenuId());
-            orderItemRepository.save(OrderItem.builder()
+
+        List<Long> menuIdList = orderItemReqDtoList.stream().map(OrderItemReqDto::getMenuId).toList();
+
+        Map<Long, Menu> menuMap = menuService.findAllBy(menuIdList)
+                .stream()
+                .collect(Collectors.toMap(Menu::getId, m -> m));
+
+        List<OrderItem> items = orderItemReqDtoList.stream().map(dto -> {
+            Menu menu = menuMap.get(dto.getMenuId());
+            if (menu == null) throw new CustomException(ErrorCode.NOT_FOUND);
+
+            return OrderItem.builder()
                     .order(newOrder)
                     .menu(menu)
                     .menuName(menu.getName())
                     .unitPrice(menu.getPrice())
                     .quantity(dto.getQuantity())
                     .subtotal(menu.getPrice().multiply(BigDecimal.valueOf(dto.getQuantity())))
-                    .build());
-        });
+                    .build();
+        }).toList();
+
+        orderItemRepository.saveAll(items);
     }
 
     private String generateOrderNumber() {
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
-        long todayCount = orderRepository.countByCreatedAtBetween(
-                LocalDate.now().atStartOfDay(),
-                LocalDate.now().atTime(23, 59, 59)
-        );
+        long sequence = orderRepository.getNextOrderSequence();
 
-        return String.format("ORD-%s-%06d", date, todayCount + 1);
+        return String.format("ORD-%s-%06d", date, sequence);
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<OrderResDto> getOrders(Long storeId, SearchDto searchDto) {
+    public PageResponse<OrderResDto> getOrders(Long storeId, OrderSearchDto searchDto) {
 
-        storeService.findById(storeId);
+        Store store = storeService.findById(storeId);
 
-        Page<Order> orders = orderRepository.findAllByStoreId(storeId, SearchDto.toPageable(searchDto));
+        Page<Order> orders = orderRepository.findAll(OrderSpecification.search(store, searchDto), SearchDto.toPageable(searchDto));
 
         List<Long> orderIds = orders.getContent().stream()
                 .map(Order::getId)
@@ -103,6 +116,10 @@ public class OrderService {
         storeService.findById(storeId);
 
         Order order = orderRepository.findById(orderId).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
+
+        if (reqDto.getStatus() != Status.CANCELLED)
+            throw new CustomException(VALIDATION_FAILED);
+
         order.setStatus(reqDto.getStatus());
     }
 }
