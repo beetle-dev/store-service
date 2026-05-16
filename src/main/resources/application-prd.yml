@@ -33,6 +33,9 @@ cloud:
     directory:
       menu: menu
 
+gateway:
+  secret: ${GATEWAY_SECRET}
+
 logging:
   level:
     org.springframework.cache: TRACE
