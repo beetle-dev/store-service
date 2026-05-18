@@ -1,6 +1,6 @@
 package com.cafe.storeservice.dto.history;
 
-import com.cafe.storeservice.domain.SalesStatsHourly;
+import com.cafe.storeservice.domain.salesQuery.SalesStatsHourly;
 import lombok.Builder;
 import lombok.Getter;
 

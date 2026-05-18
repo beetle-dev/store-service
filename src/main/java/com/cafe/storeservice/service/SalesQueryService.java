@@ -1,8 +1,8 @@
 package com.cafe.storeservice.service;
 
 import com.cafe.storeservice.common.response.PageResponse;
-import com.cafe.storeservice.domain.SalesStatsDaily;
-import com.cafe.storeservice.domain.SalesStatsHourly;
+import com.cafe.storeservice.domain.salesQuery.SalesStatsDaily;
+import com.cafe.storeservice.domain.salesQuery.SalesStatsHourly;
 import com.cafe.storeservice.dto.history.SalesHistorySearchDto;
 import com.cafe.storeservice.dto.history.SalesStatsDailyResDto;
 import com.cafe.storeservice.dto.history.SalesStatsHourlyResDto;

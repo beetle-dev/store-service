@@ -1,4 +1,4 @@
-package com.cafe.storeservice.domain;
+package com.cafe.storeservice.domain.order;
 
 public enum Status {
     COMPLETED,

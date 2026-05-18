@@ -1,7 +1,6 @@
 package com.cafe.storeservice.dto.order;
 
-import com.cafe.storeservice.domain.PaymentMethod;
-import com.cafe.storeservice.dto.order.OrderItemReqDto;
+import com.cafe.storeservice.domain.order.PaymentMethod;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

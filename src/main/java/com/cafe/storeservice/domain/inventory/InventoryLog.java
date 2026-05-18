@@ -1,5 +1,7 @@
-package com.cafe.storeservice.domain;
+package com.cafe.storeservice.domain.inventory;
 
+import com.cafe.storeservice.domain.inventory.ChangeType;
+import com.cafe.storeservice.domain.menu.Ingredient;
 import com.cafe.storeservice.domain.store.Store;
 import jakarta.persistence.*;
 import lombok.*;

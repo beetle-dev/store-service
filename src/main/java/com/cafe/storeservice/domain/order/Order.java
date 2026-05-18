@@ -1,8 +1,6 @@
 package com.cafe.storeservice.domain.order;
 
 import com.cafe.storeservice.domain.BaseEntity;
-import com.cafe.storeservice.domain.PaymentMethod;
-import com.cafe.storeservice.domain.Status;
 import com.cafe.storeservice.domain.store.Store;
 import jakarta.persistence.*;
 import lombok.*;

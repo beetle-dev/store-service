@@ -1,4 +1,4 @@
-package com.cafe.storeservice.domain;
+package com.cafe.storeservice.domain.salesQuery;
 
 import com.cafe.storeservice.domain.store.Store;
 import jakarta.persistence.*;
@@ -6,18 +6,17 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(
-        columnNames = {"store_id", "stat_date"}
+        columnNames = {"store_id", "stat_hour"}
 ))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
-public class SalesStatsDaily {
+public class SalesStatsHourly {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +27,7 @@ public class SalesStatsDaily {
     private Store store;
 
     @Column(nullable = false)
-    private LocalDate statDate;
+    private LocalDateTime statHour;
 
     @Builder.Default
     @Column(nullable = false)
@@ -45,11 +44,6 @@ public class SalesStatsDaily {
     @Builder.Default
     @Column(nullable = false, precision = 12)
     private BigDecimal cashSales = BigDecimal.ZERO;
-
-    @Column(nullable = false, precision = 10)
-    private BigDecimal avgOrderPrice;
-
-    private Integer peakHour;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

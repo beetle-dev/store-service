@@ -1,8 +1,8 @@
 package com.cafe.storeservice.dto.order;
 
 import com.cafe.storeservice.domain.order.Order;
-import com.cafe.storeservice.domain.PaymentMethod;
-import com.cafe.storeservice.domain.Status;
+import com.cafe.storeservice.domain.order.PaymentMethod;
+import com.cafe.storeservice.domain.order.Status;
 import lombok.Builder;
 import lombok.Getter;
 

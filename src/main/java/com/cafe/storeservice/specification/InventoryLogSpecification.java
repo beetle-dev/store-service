@@ -1,6 +1,7 @@
 package com.cafe.storeservice.specification;
 
-import com.cafe.storeservice.domain.*;
+import com.cafe.storeservice.domain.inventory.ChangeType;
+import com.cafe.storeservice.domain.inventory.InventoryLog;
 import com.cafe.storeservice.dto.inventory.InventoryLogSearchDto;
 import org.springframework.data.jpa.domain.Specification;
 

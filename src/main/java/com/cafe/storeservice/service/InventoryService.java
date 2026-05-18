@@ -3,7 +3,7 @@ package com.cafe.storeservice.service;
 import com.cafe.storeservice.common.exception.CustomException;
 import com.cafe.storeservice.common.exception.ErrorCode;
 import com.cafe.storeservice.common.response.PageResponse;
-import com.cafe.storeservice.domain.InventoryLog;
+import com.cafe.storeservice.domain.inventory.InventoryLog;
 import com.cafe.storeservice.domain.inventory.StoreInventory;
 import com.cafe.storeservice.domain.store.Store;
 import com.cafe.storeservice.dto.*;

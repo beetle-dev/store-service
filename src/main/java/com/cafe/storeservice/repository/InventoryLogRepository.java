@@ -1,6 +1,6 @@
 package com.cafe.storeservice.repository;
 
-import com.cafe.storeservice.domain.InventoryLog;
+import com.cafe.storeservice.domain.inventory.InventoryLog;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

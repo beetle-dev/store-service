@@ -1,6 +1,6 @@
 package com.cafe.storeservice.dto.menu;
 
-import com.cafe.storeservice.domain.Menu;
+import com.cafe.storeservice.domain.menu.Menu;
 import lombok.Builder;
 import lombok.Getter;
 

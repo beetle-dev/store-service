@@ -1,6 +1,6 @@
 package com.cafe.storeservice.dto.inventory;
 
-import com.cafe.storeservice.domain.ChangeType;
+import com.cafe.storeservice.domain.inventory.ChangeType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 

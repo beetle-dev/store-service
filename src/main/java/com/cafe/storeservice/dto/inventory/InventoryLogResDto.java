@@ -1,7 +1,7 @@
 package com.cafe.storeservice.dto.inventory;
 
-import com.cafe.storeservice.domain.ChangeType;
-import com.cafe.storeservice.domain.InventoryLog;
+import com.cafe.storeservice.domain.inventory.ChangeType;
+import com.cafe.storeservice.domain.inventory.InventoryLog;
 import lombok.Builder;
 import lombok.Getter;
 

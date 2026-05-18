@@ -1,6 +1,6 @@
-package com.cafe.storeservice.domain;
+package com.cafe.storeservice.domain.menu;
 
-import com.cafe.storeservice.dto.menu.MenuCreateReqDto;
+import com.cafe.storeservice.domain.BaseEntity;
 import com.cafe.storeservice.dto.menu.MenuModifyReqDto;
 import jakarta.persistence.*;
 import lombok.*;
