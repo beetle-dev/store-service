@@ -52,6 +52,8 @@ jobs:
         id: build-image
 
       - name: Download ECS task definition
+        env:
+          TASK_: ${{ vars.ECR_TASK }}
         run: |
           aws ecs describe-task-definition \
             --task-definition api-gateway-task \
