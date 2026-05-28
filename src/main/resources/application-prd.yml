@@ -39,13 +39,13 @@ spring:
 cloud:
   aws:
     s3:
-      bucket: store-service-s3-bucket
+      bucket: ${S3_BUCKET}
     kms:
-      key-arn: arn:aws:kms:ap-northeast-2:322533971309:key/7d04c5d4-322c-48a0-ad51-9f73934b503d
+      key-arn: ${S3_KEY_ARN}
     region:
-      static: ap-northeast-2
+      static: ${S3_REGION}
     directory:
-      menu: menu
+      menu: ${S3_DIRECTORY}
 
 gateway:
   secret: ${GATEWAY_SECRET}
