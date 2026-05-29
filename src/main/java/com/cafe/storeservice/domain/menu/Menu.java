@@ -37,7 +37,7 @@ public class Menu extends BaseEntity {
     private BigDecimal cost;
 
     @Builder.Default
-    @Column(nullable = false)
+    @Column(name = "active", nullable = false)
     private Boolean isActive = true;
 
     @Column(length = 500)

@@ -41,7 +41,7 @@ public class OrderSimulationScheduler {
 
         List<Store> stores = storeRepository.findAll();
         for (Store store : stores) {
-            List<Menu> menus = menuRepository.findByStoreIdAndIsActiveTrue(store.getId());
+            List<Menu> menus = menuRepository.findByIsActiveTrue();
             if (menus.isEmpty()) continue;
 
             int orderCount = random.nextInt(max - min + 1) + min;

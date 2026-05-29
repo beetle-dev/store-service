@@ -35,7 +35,7 @@ public class Store extends BaseEntity {
     private LocalTime closeTime;
 
     @Builder.Default
-    @Column(nullable = false)
+    @Column(name = "active", nullable = false)
     private boolean active = true;
 
     public void modified(ModifyStoreReqDto reqDto) {
