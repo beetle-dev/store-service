@@ -48,3 +48,8 @@ cloud:
 
 gateway:
   secret: ${GATEWAY_SECRET}
+
+simulation:
+  enabled: true
+  orders-per-store-min: 15
+  orders-per-store-max: 40
