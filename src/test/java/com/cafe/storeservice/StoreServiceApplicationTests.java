@@ -2,10 +2,11 @@ package com.cafe.storeservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.redis.core.ReactiveStringRedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -13,6 +14,12 @@ class StoreServiceApplicationTests {
 
     @MockitoBean
     StringRedisTemplate redisTemplate;
+
+    @MockitoBean
+    S3Client s3Client;
+
+    @MockitoBean
+    S3Presigner s3Presigner;
 
     @Test
     void contextLoads() {
