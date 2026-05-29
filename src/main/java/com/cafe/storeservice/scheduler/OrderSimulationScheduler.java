@@ -11,6 +11,7 @@ import com.cafe.storeservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+@Component
 @RequiredArgsConstructor
 public class OrderSimulationScheduler {
     
