@@ -34,8 +34,9 @@ public class OrderSimulationScheduler {
     
     private final StoreRepository storeRepository;
     private final MenuRepository menuRepository;
-    private final Random random;
     private final OrderService orderService;
+
+    private final Random random = new Random();
 
     @Scheduled(cron = "0 */2 * * * *")
     public void generateDailyOrders() {
