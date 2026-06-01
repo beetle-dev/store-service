@@ -38,7 +38,7 @@ public class OrderSimulationScheduler {
 
     private final Random random = new Random();
 
-    @Scheduled(cron = "0 */2 * * * *")
+    @Scheduled(cron = "0 0 2 * * *")
     public void generateDailyOrders() {
         if (!simulationEnabled) return;
 
