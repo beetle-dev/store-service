@@ -31,7 +31,7 @@ public class SalesAggregationScheduler {
     private final SalesStatsDailyRepository dailyRepository;
 
     @Transactional
-    @Scheduled(cron = "0 0 * * * *")
+    @Scheduled(cron = "0 */5 * * * *")
     public void aggregateHourly() {
         LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1).truncatedTo(ChronoUnit.HOURS);
         LocalDateTime now = LocalDateTime.now()
