@@ -17,7 +17,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,9 +32,8 @@ public class SalesAggregationScheduler {
     @Transactional
     @Scheduled(cron = "0 */5 * * * *")
     public void aggregateHourly() {
-        LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1).truncatedTo(ChronoUnit.HOURS);
-        LocalDateTime now = LocalDateTime.now()
-                .truncatedTo(ChronoUnit.HOURS);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime oneHourAgo = now.minusHours(1);
 
         List<Order> orderList = orderRepository.findAllByCreatedAtBetween(oneHourAgo, now);
 
@@ -47,7 +45,7 @@ public class SalesAggregationScheduler {
 
             hourlyRepository.save(SalesStatsHourly.builder()
                     .store(store)
-                    .statHour(LocalDateTime.now())
+                    .statHour(oneHourAgo)
                     .orderCount(result.count)
                     .totalSales(result.total)
                     .cardSales(result.card)
