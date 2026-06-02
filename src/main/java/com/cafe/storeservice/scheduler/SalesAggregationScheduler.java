@@ -55,7 +55,7 @@ public class SalesAggregationScheduler {
     }
 
     @Transactional
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 */5 * * * *")
     public void aggregateDaily() {
 
         LocalDate yesterday = LocalDate.now().minusDays(1);
