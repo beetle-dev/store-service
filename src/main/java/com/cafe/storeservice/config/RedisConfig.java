@@ -43,6 +43,7 @@ public class RedisConfig {
                 .defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(10))
                 .disableCachingNullValues()
+                .computePrefixWith(cacheName -> "{" + cacheName + "}::")
                 .serializeKeysWith(
                         RedisSerializationContext.SerializationPair
                                 .fromSerializer(new StringRedisSerializer()))
