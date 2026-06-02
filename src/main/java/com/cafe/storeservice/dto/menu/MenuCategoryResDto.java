@@ -1,11 +1,15 @@
 package com.cafe.storeservice.dto.menu;
 
 import com.cafe.storeservice.domain.menu.MenuCategory;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MenuCategoryResDto {
     private Long id;
     private String name;
