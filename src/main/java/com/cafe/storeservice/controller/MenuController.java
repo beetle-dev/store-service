@@ -32,7 +32,7 @@ public class MenuController {
     @PatchMapping("/{id}")
     public ResponseEntity<CommonResponse<?>> modified(
             @PathVariable("id") Long id,
-            @Valid @RequestBody MenuModifyReqDto reqDto) {
+            @Valid @ModelAttribute MenuModifyReqDto reqDto) {
         menuService.modified(id, reqDto);
         return ResponseEntity.ok(CommonResponse.ok());
     }
