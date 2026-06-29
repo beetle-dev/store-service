@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: prd
     permissions:
-      id-token: write   
+      id-token: write
       contents: read
 
     steps:
@@ -23,8 +23,8 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-          
-      - name: Run tests      
+
+      - name: Run tests
         run: ./gradlew test
 
       - name: Build JAR
@@ -55,32 +55,18 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_KEY }}
-          envs: ECR_REGISTRY,IMAGE_TAG,ECR_REPOSITORY
           script: |
+            cd /home/ec2-user/cafe-admin
+
             # ECR 로그인
             aws ecr get-login-password --region ${{ vars.AWS_REGION }} | \
               docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
 
-            # 새 이미지 pull
+            # 새 이미지 pull 후 latest 태그로 재태깅
             docker pull ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ github.sha }}
+            docker tag \
+              ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ github.sha }} \
+              ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:latest
 
-            # 기존 컨테이너 중지 & 제거
-            docker stop api-gateway || true
-            docker rm api-gateway || true
-
-            # 새 컨테이너 실행
-            docker run -d \
-              --name api-gateway \
-              --restart always \
-              -p 8080:8080 \
-              -e DB_URL=${{ secrets.DB_URL }} \
-              -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
-              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-              -e REDIS_HOST=${{ secrets.REDIS_HOST }} \
-              -e REDIS_PORT=${{ secrets.REDIS_PORT }} \
-              -e S3_BUCKET=${{ secrets.S3_BUCKET }} \
-              -e S3_KEY_ARN=${{ secrets.S3_KEY_ARN }} \
-              -e S3_REGION=${{ secrets.S3_REGION }} \
-              -e S3_DIRECTORY=${{ secrets.S3_DIRECTORY }} \
-              -e GATEWAY_SECRET=${{ secrets.GATEWAY_SECRET }} \
-              ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ github.sha }}
+            # store-service만 재시작
+            docker-compose up -d --no-deps store-service
