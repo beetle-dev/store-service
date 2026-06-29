@@ -48,29 +48,39 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
-        id: build-image
 
-      - name: Download ECS task definition
-        env:
-          TASK: ${{ vars.ECR_TASK }}
-        run: |
-          aws ecs describe-task-definition \
-            --task-definition $TASK \
-            --query taskDefinition > task-def.json
-
-      - name: Update ECS task definition with new image
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
         with:
-          task-definition: task-def.json
-          container-name: ${{ vars.CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.image }}
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_KEY }}
+          envs: ECR_REGISTRY,IMAGE_TAG,ECR_REPOSITORY
+          script: |
+            # ECR 로그인
+            aws ecr get-login-password --region ${{ vars.AWS_REGION }} | \
+              docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
 
-      - name: Deploy to ECS
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ vars.ECS_SERVICE }}
-          cluster: ${{ vars.ECS_CLUSTER }}
-          wait-for-service-stability: true
+            # 새 이미지 pull
+            docker pull ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ github.sha }}
+
+            # 기존 컨테이너 중지 & 제거
+            docker stop api-gateway || true
+            docker rm api-gateway || true
+
+            # 새 컨테이너 실행
+            docker run -d \
+              --name api-gateway \
+              --restart always \
+              -p 8080:8080 \
+              -e DB_URL=${{ secrets.DB_URL }} \
+              -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
+              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+              -e REDIS_HOST=${{ secrets.REDIS_HOST }} \
+              -e REDIS_PORT=${{ secrets.REDIS_PORT }} \
+              -e S3_BUCKET=${{ secrets.S3_BUCKET }} \
+              -e S3_KEY_ARN=${{ secrets.S3_KEY_ARN }} \
+              -e S3_REGION=${{ secrets.S3_REGION }} \
+              -e S3_DIRECTORY=${{ secrets.S3_DIRECTORY }} \
+              -e GATEWAY_SECRET=${{ secrets.GATEWAY_SECRET }} \
+              ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ github.sha }}

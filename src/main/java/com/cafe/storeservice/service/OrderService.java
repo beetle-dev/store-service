@@ -117,7 +117,7 @@ public class OrderService {
 
         Order order = orderRepository.findById(orderId).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
 
-        if (reqDto.getStatus() != Status.CANCELLED)
+        if (reqDto.getStatus() == Status.COMPLETED)
             throw new CustomException(VALIDATION_FAILED);
 
         order.setStatus(reqDto.getStatus());
