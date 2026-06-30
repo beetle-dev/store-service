@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Builder
 public class SalesStatsHourlyResDto {
     private Long id;
-    private Long storeId;
     private LocalDateTime statHour;
     private Integer orderCount;
     private BigDecimal totalSales;
@@ -22,7 +21,6 @@ public class SalesStatsHourlyResDto {
     public static SalesStatsHourlyResDto from(SalesStatsHourly hourly) {
         return SalesStatsHourlyResDto.builder()
                 .id(hourly.getId())
-                .storeId(hourly.getStore().getId())
                 .statHour(hourly.getStatHour())
                 .orderCount(hourly.getOrderCount())
                 .totalSales(hourly.getTotalSales())

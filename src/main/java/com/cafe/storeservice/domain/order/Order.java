@@ -1,7 +1,6 @@
 package com.cafe.storeservice.domain.order;
 
 import com.cafe.storeservice.domain.BaseEntity;
-import com.cafe.storeservice.domain.store.Store;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,10 +17,6 @@ public class Order extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id", nullable = false)
-    private Store store;
 
     @Column(nullable = false, unique = true, length = 30)
     private String orderNumber;

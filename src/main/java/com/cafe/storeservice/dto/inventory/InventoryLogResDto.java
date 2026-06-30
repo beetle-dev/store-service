@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @Builder
 public class InventoryLogResDto {
     private Long id;
-    private Long storeId;
     private Long ingredientId;
     private String ingredientName;
     private ChangeType changeType;
@@ -25,7 +24,6 @@ public class InventoryLogResDto {
     public static InventoryLogResDto from(InventoryLog inventoryLog) {
         return InventoryLogResDto.builder()
                 .id(inventoryLog.getId())
-                .storeId(inventoryLog.getStore().getId())
                 .ingredientId(inventoryLog.getIngredient().getId())
                 .ingredientName(inventoryLog.getIngredient().getName())
                 .changeType(inventoryLog.getChangeType())

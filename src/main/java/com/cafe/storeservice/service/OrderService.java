@@ -7,7 +7,6 @@ import com.cafe.storeservice.domain.menu.Menu;
 import com.cafe.storeservice.domain.order.Status;
 import com.cafe.storeservice.domain.order.Order;
 import com.cafe.storeservice.domain.order.OrderItem;
-import com.cafe.storeservice.domain.store.Store;
 import com.cafe.storeservice.dto.*;
 import com.cafe.storeservice.dto.order.*;
 import com.cafe.storeservice.repository.OrderItemRepository;
@@ -31,17 +30,15 @@ import static com.cafe.storeservice.common.exception.ErrorCode.VALIDATION_FAILED
 @RequiredArgsConstructor
 public class OrderService {
 
-    private final StoreService storeService;
     private final MenuService menuService;
 
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
 
     @Transactional
-    public void registerOrder(Long storeId, OrderCreateReqDto orderCreateReqDto) {
+    public void registerOrder(OrderCreateReqDto orderCreateReqDto) {
 
         Order newOrder = orderRepository.save(Order.builder()
-                .store(storeService.findById(storeId))
                 .orderNumber(generateOrderNumber())
                 .totalAmount(orderCreateReqDto.getTotalAmount())
                 .paymentMethod(orderCreateReqDto.getPaymentMethod())
@@ -81,11 +78,9 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<OrderResDto> getOrders(Long storeId, OrderSearchDto searchDto) {
+    public PageResponse<OrderResDto> getOrders(OrderSearchDto searchDto) {
 
-        Store store = storeService.findById(storeId);
-
-        Page<Order> orders = orderRepository.findAll(OrderSpecification.search(store, searchDto), SearchDto.toPageable(searchDto));
+        Page<Order> orders = orderRepository.findAll(OrderSpecification.search(searchDto), SearchDto.toPageable(searchDto));
 
         List<Long> orderIds = orders.getContent().stream()
                 .map(Order::getId)
@@ -111,9 +106,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void updateOrder(Long storeId, Long orderId, OrderUpdateReqDto reqDto) {
-
-        storeService.findById(storeId);
+    public void updateOrder(Long orderId, OrderUpdateReqDto reqDto) {
 
         Order order = orderRepository.findById(orderId).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
 

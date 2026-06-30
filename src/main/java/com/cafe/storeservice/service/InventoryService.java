@@ -5,7 +5,6 @@ import com.cafe.storeservice.common.exception.ErrorCode;
 import com.cafe.storeservice.common.response.PageResponse;
 import com.cafe.storeservice.domain.inventory.InventoryLog;
 import com.cafe.storeservice.domain.inventory.StoreInventory;
-import com.cafe.storeservice.domain.store.Store;
 import com.cafe.storeservice.dto.*;
 import com.cafe.storeservice.dto.inventory.*;
 import com.cafe.storeservice.repository.InventoryLogRepository;
@@ -25,8 +24,6 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 public class InventoryService {
 
-    private final StoreService storeService;
-
     private final StoreInventoryRepository storeInventoryRepository;
     private final InventoryLogRepository inventoryLogRepository;
 
@@ -34,17 +31,15 @@ public class InventoryService {
     @Cacheable(value = "inventory:list", key = "#id + ':' + #searchDto.toString()")
     public PageResponse<InventoryResDto> getInventory(Long id, InventorySearchDto searchDto) {
 
-        Store store = storeService.findById(id);
-
-        Page<StoreInventory> inventories = storeInventoryRepository.findAll(InventorySpecification.search(store, searchDto), SearchDto.toPageable(searchDto));
+        Page<StoreInventory> inventories = storeInventoryRepository.findAll(InventorySpecification.search(searchDto), SearchDto.toPageable(searchDto));
 
         return PageResponse.of(inventories.map(InventoryResDto::from));
     }
 
     @Transactional
     @CacheEvict(value = "inventory:list", allEntries = true)
-    public void adjustInventory(Long storeId, InventoryReqDto reqDto, String uuid) {
-        StoreInventory storeInventory = storeInventoryRepository.findByStoreIdAndIngredientId(storeId, reqDto.getIngredientId())
+    public void adjustInventory(InventoryReqDto reqDto, String uuid) {
+        StoreInventory storeInventory = storeInventoryRepository.findByIngredientId(reqDto.getIngredientId())
                 .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
 
         BigDecimal currentStock = storeInventory.getCurrentStock();
@@ -63,7 +58,6 @@ public class InventoryService {
         storeInventory.setCurrentStock(stockAfter);
 
         inventoryLogRepository.save(InventoryLog.builder()
-                .store(storeInventory.getStore())
                 .ingredient(storeInventory.getIngredient())
                 .changeType(reqDto.getChangeType())
                 .quantity(reqDto.getQuantity())
@@ -74,9 +68,9 @@ public class InventoryService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<InventoryLogResDto> getInventoryLogs(Long storeId, InventoryLogSearchDto searchDto) {
+    public PageResponse<InventoryLogResDto> getInventoryLogs(InventoryLogSearchDto searchDto) {
 
-        Page<InventoryLog> inventoryLogs = inventoryLogRepository.findAll(InventoryLogSpecification.search(storeId, searchDto), SearchDto.toPageable(searchDto));
+        Page<InventoryLog> inventoryLogs = inventoryLogRepository.findAll(InventoryLogSpecification.search(searchDto), SearchDto.toPageable(searchDto));
 
         return PageResponse.of(inventoryLogs.map(InventoryLogResDto::from));
     }

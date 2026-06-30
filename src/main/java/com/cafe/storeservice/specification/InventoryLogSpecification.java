@@ -9,19 +9,11 @@ public class InventoryLogSpecification {
 
     public InventoryLogSpecification (){}
 
-    public static Specification<InventoryLog> search(Long storeId, InventoryLogSearchDto dto) {
+    public static Specification<InventoryLog> search(InventoryLogSearchDto dto) {
         return Specification.allOf(
-                storeIdEquals(storeId),
                 ingredientEquals(dto.getIngredientName()),
                 changeTypeEquals(dto.getChangeType())
         );
-    }
-
-    public static Specification<InventoryLog> storeIdEquals(Long storeId) {
-        return (root, query, cb) ->
-                storeId != null
-                        ? cb.equal(root.get("store").get("id"), storeId)
-                        : null;
     }
 
     public static Specification<InventoryLog> ingredientEquals(String ingredientName) {

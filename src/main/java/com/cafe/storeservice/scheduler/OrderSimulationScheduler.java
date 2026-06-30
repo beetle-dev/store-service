@@ -2,11 +2,9 @@ package com.cafe.storeservice.scheduler;
 
 import com.cafe.storeservice.domain.menu.Menu;
 import com.cafe.storeservice.domain.order.PaymentMethod;
-import com.cafe.storeservice.domain.store.Store;
 import com.cafe.storeservice.dto.order.OrderCreateReqDto;
 import com.cafe.storeservice.dto.order.OrderItemReqDto;
 import com.cafe.storeservice.repository.MenuRepository;
-import com.cafe.storeservice.repository.StoreRepository;
 import com.cafe.storeservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +30,6 @@ public class OrderSimulationScheduler {
     @Value("${simulation.orders-per-store-max}")
     private Integer max;
     
-    private final StoreRepository storeRepository;
     private final MenuRepository menuRepository;
     private final OrderService orderService;
 
@@ -42,16 +39,12 @@ public class OrderSimulationScheduler {
     public void generateDailyOrders() {
         if (!simulationEnabled) return;
 
-        List<Store> stores = storeRepository.findAll();
-        for (Store store : stores) {
-            List<Menu> menus = menuRepository.findByIsActiveTrue();
-            if (menus.isEmpty()) continue;
+        List<Menu> menus = menuRepository.findByIsActiveTrue();
 
-            int orderCount = random.nextInt(max - min + 1) + min;
-            for (int i = 0; i < orderCount; i++) {
-                OrderCreateReqDto dto = buildRandomOrder(menus);
-                orderService.registerOrder(store.getId(), dto);
-            }
+        int orderCount = random.nextInt(max - min + 1) + min;
+        for (int i = 0; i < orderCount; i++) {
+            OrderCreateReqDto dto = buildRandomOrder(menus);
+            orderService.registerOrder(dto);
         }
     }
 

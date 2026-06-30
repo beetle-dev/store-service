@@ -1,8 +1,6 @@
 package com.cafe.storeservice.domain.inventory;
 
-import com.cafe.storeservice.domain.inventory.ChangeType;
 import com.cafe.storeservice.domain.menu.Ingredient;
-import com.cafe.storeservice.domain.store.Store;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,10 +19,6 @@ public class InventoryLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id", nullable = false)
-    private Store store;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ingredient_id", nullable = false)

@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @Builder
 public class SalesStatsDailyResDto {
     private Long id;
-    private Long storeId;
     private LocalDate statDate;
     private Integer orderCount;
     private BigDecimal totalSales;
@@ -25,7 +24,6 @@ public class SalesStatsDailyResDto {
     public static SalesStatsDailyResDto from(SalesStatsDaily daily) {
         return SalesStatsDailyResDto.builder()
                 .id(daily.getId())
-                .storeId(daily.getStore().getId())
                 .statDate(daily.getStatDate())
                 .orderCount(daily.getOrderCount())
                 .totalSales(daily.getTotalSales())
