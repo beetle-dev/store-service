@@ -105,7 +105,7 @@ public class MenuService {
     @Cacheable(value = "menu-category:list")
     public PageResponse<MenuCategoryResDto> getCategories() {
         return PageResponse.of(
-                menuCategoryRepository.findAll(PageRequest.of(0, 1000, Sort.by("sortOrder").ascending()))
+                menuCategoryRepository.findAll(PageRequest.of(0, 1000, Sort.by(Sort.Direction.ASC, "sortOrder", "name")))
                         .map(MenuCategoryResDto::from)
         );
     }
@@ -125,12 +125,15 @@ public class MenuService {
     }
 
     @Transactional(readOnly = true)
-    public Menu findById(Long menuId) {
-        return menuRepository.findById(menuId).orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND));
-    }
-
-    @Transactional(readOnly = true)
     public List<Menu> findAllBy(List<Long> menuIdList) {
         return menuRepository.findAllById(menuIdList);
+    }
+
+    @Transactional
+    public void modifiedCategory(Long id, MenuCategoryModifyReqDto reqDto) {
+        MenuCategory category = menuCategoryRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+
+        category.modified(reqDto);
     }
 }

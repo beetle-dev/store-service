@@ -29,7 +29,7 @@ public class InventoryService {
 
     @Transactional(readOnly = true)
     @Cacheable(value = "inventory:list", key = "#id + ':' + #searchDto.toString()")
-    public PageResponse<InventoryResDto> getInventory(Long id, InventorySearchDto searchDto) {
+    public PageResponse<InventoryResDto> getInventory(InventorySearchDto searchDto) {
 
         Page<StoreInventory> inventories = storeInventoryRepository.findAll(InventorySpecification.search(searchDto), SearchDto.toPageable(searchDto));
 

@@ -1,10 +1,7 @@
 package com.cafe.storeservice.controller;
 
 import com.cafe.storeservice.common.response.CommonResponse;
-import com.cafe.storeservice.dto.menu.MenuCategoryReqDto;
-import com.cafe.storeservice.dto.menu.MenuCreateReqDto;
-import com.cafe.storeservice.dto.menu.MenuModifyReqDto;
-import com.cafe.storeservice.dto.menu.MenuSearchDto;
+import com.cafe.storeservice.dto.menu.*;
 import com.cafe.storeservice.service.MenuService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +42,13 @@ public class MenuController {
     @PostMapping("/category")
     public ResponseEntity<CommonResponse<?>> registerCategory(@Valid @RequestBody MenuCategoryReqDto reqDto) {
         menuService.registerCategory(reqDto);
+        return ResponseEntity.ok(CommonResponse.ok());
+    }
+
+    @PatchMapping("/category/{id}")
+    public ResponseEntity<CommonResponse<?>> modifyCategory(@PathVariable("id") Long id,
+                                                            @Valid @RequestBody MenuCategoryModifyReqDto reqDto) {
+        menuService.modifiedCategory(id, reqDto);
         return ResponseEntity.ok(CommonResponse.ok());
     }
 }

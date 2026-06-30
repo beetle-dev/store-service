@@ -1,7 +1,10 @@
 package com.cafe.storeservice.domain.menu;
 
+import com.cafe.storeservice.dto.menu.MenuCategoryModifyReqDto;
+import com.cafe.storeservice.dto.menu.MenuCategoryReqDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.util.StringUtils;
 
 @Getter
 @Entity
@@ -25,4 +28,10 @@ public class MenuCategory {
     @Builder.Default
     @Column(nullable = false)
     private Boolean isActive = true;
+
+    public void modified(MenuCategoryModifyReqDto reqDto) {
+        if (StringUtils.hasText(reqDto.getName())) this.name = reqDto.getName();
+        if (reqDto.getSortOrder() != null) this.sortOrder = reqDto.getSortOrder();
+        if (reqDto.getSortOrder() != null) this.isActive = reqDto.getIsActive();
+    }
 }

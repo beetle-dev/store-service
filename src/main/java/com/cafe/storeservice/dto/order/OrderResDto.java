@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -17,6 +18,7 @@ public class OrderResDto {
     private Status status;
     private BigDecimal totalAmount;
     private PaymentMethod paymentMethod;
+    private LocalDateTime createdAt;
     private List<OrderItemResDto> orderItemResDtoList;
 
     public static OrderResDto from(Order order, List<OrderItemResDto> orderItemResDtoList) {
@@ -26,6 +28,7 @@ public class OrderResDto {
                 .status(order.getStatus())
                 .totalAmount(order.getTotalAmount())
                 .paymentMethod(order.getPaymentMethod())
+                .createdAt(order.getCreatedAt())
                 .orderItemResDtoList(orderItemResDtoList)
                 .build();
     }
