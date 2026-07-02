@@ -20,7 +20,6 @@ public class S3Config {
     public S3Client s3Client() {
         return S3Client.builder()
                 .region(Region.of(region))
-                // todo 운영: EC2 IAM Role도 자동으로 처리됨
                 .credentialsProvider(DefaultCredentialsProvider.create())
                 .build();
     }

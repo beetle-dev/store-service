@@ -19,7 +19,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
@@ -45,6 +45,12 @@ cloud:
 gateway:
   secret: ${GATEWAY_SECRET}
 
+kafka:
+  bootstrap-servers: kafka:9092
+
+alarm:
+  notification-email: ${ALARM_NOTIFICATION_EMAIL}
+
 simulation:
   enabled: true
   orders-per-store-min: 15
@@ -53,6 +59,5 @@ simulation:
 logging:
   level:
     root: INFO
-    org.springframework.web: DEBUG
-    org.springframework.web.servlet.DispatcherServlet: DEBUG
-    com.zaxxer.hikari: DEBUG
+    org.springframework.web.servlet.DispatcherServlet: WARN
+    com.zaxxer.hikari: INFO

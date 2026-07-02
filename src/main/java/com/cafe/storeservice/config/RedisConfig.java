@@ -29,13 +29,13 @@ import java.util.Map;
 public class RedisConfig {
 
     @Bean
-    public CacheManager cacheManager(RedisConnectionFactory connectionFactory) { // todo 스터디 필요
+    public CacheManager cacheManager(RedisConnectionFactory connectionFactory) {
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         objectMapper.activateDefaultTyping(
-                objectMapper.getPolymorphicTypeValidator(), // todo?? 어떤 클래스를 허용할 것인지에 대한 정보 필요 없나?(validation 기준 필요)
+                objectMapper.getPolymorphicTypeValidator(),
                 ObjectMapper.DefaultTyping.NON_FINAL,
                 JsonTypeInfo.As.PROPERTY);
 
@@ -53,8 +53,6 @@ public class RedisConfig {
 
         Map<String, RedisCacheConfiguration> cacheConfigs = new HashMap<>();
 
-        cacheConfigs.put("store:list", defaultConfig);
-
         cacheConfigs.put("menu:list",
                 defaultConfig.entryTtl(Duration.ofMinutes(10)));
 
@@ -62,9 +60,6 @@ public class RedisConfig {
 
         cacheConfigs.put("inventory:list",
                 defaultConfig.entryTtl(Duration.ofMinutes(5)));
-
-        cacheConfigs.put("dashboard",
-                defaultConfig.entryTtl(Duration.ofMinutes(3)));
 
         RedisCacheWriter cacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(
                 connectionFactory,

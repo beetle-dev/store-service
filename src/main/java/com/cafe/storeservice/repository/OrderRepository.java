@@ -12,11 +12,6 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-
-    List<Order> findAllByCreatedAtBetween(LocalDateTime oneHourAgo, LocalDateTime now);
-
-    long countByCreatedAtBetween(LocalDateTime from, LocalDateTime to);
-
     Page<Order> findAll(Specification<Order> search, Pageable pageable);
 
     @Query(value = "SELECT nextval('order_number_seq')", nativeQuery = true)

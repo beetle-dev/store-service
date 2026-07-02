@@ -20,6 +20,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -47,6 +48,8 @@ public class MenuService {
         }));
     }
 
+    @Transactional
+    @CacheEvict(value = "menu:list", allEntries = true)
     public void register(MenuCreateReqDto reqDto) {
         String key = reqDto.getImage() != null?
                 s3Service.upload(reqDto.getImage(), menuDirectory):
@@ -56,11 +59,15 @@ public class MenuService {
             saveMenu(reqDto, key);
         } catch (Exception e) {
             if (key != null) s3Service.delete(key);
+
+            if (e instanceof CustomException customException) {
+                throw customException;
+            }
+
             throw new CustomException(ErrorCode.REGISTER_FAIL);
         }
     }
 
-    @CacheEvict(value = "menu:list", allEntries = true)
     public void saveMenu(MenuCreateReqDto reqDto, String key) {
 
         menuRepository.findByName(reqDto.getName())
@@ -98,7 +105,19 @@ public class MenuService {
             key = s3Service.upload(reqDto.getImage(), menuDirectory);
         }
 
+        String previousImageKey = menu.getImageUrl();
+
         menu.modified(reqDto, menuCategory, key);
+
+        if (StringUtils.hasText(key)) {
+            deletePreviousImage(previousImageKey);
+        }
+    }
+
+    private void deletePreviousImage(String previousImageKey) {
+        if (StringUtils.hasText(previousImageKey)) {
+            s3Service.delete(previousImageKey);
+        }
     }
 
     @Transactional(readOnly = true)
@@ -115,7 +134,7 @@ public class MenuService {
     public void registerCategory(MenuCategoryReqDto reqDto) {
 
         menuCategoryRepository.findByName(reqDto.getName())
-                .ifPresent(MenuCategory -> {throw new CustomException(ErrorCode.DUPLICATE_CATEGORY_NAME);});
+                .ifPresent(menuCategory -> {throw new CustomException(ErrorCode.DUPLICATE_CATEGORY_NAME);});
 
         MenuCategory.MenuCategoryBuilder builder = MenuCategory.builder()
                 .name(reqDto.getName());

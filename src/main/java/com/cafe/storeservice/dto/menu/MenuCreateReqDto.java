@@ -23,5 +23,4 @@ public class MenuCreateReqDto {
     private String description;
     private BigDecimal cost;
     private MultipartFile image;
-    private Boolean isActive;
 }

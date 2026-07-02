@@ -8,18 +8,24 @@ import com.cafe.storeservice.domain.order.Status;
 import com.cafe.storeservice.domain.order.Order;
 import com.cafe.storeservice.domain.order.OrderItem;
 import com.cafe.storeservice.dto.*;
+import com.cafe.storeservice.dto.alarm.AlarmEvent;
+import com.cafe.storeservice.dto.alarm.AlarmType;
 import com.cafe.storeservice.dto.order.*;
 import com.cafe.storeservice.repository.OrderItemRepository;
 import com.cafe.storeservice.repository.OrderRepository;
 import com.cafe.storeservice.specification.OrderSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,6 +40,10 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
+
+    @Value("${alarm.notification-email}")
+    private String notificationEmail;
 
     @Transactional
     public void registerOrder(OrderCreateReqDto orderCreateReqDto) {
@@ -67,6 +77,18 @@ public class OrderService {
         }).toList();
 
         orderItemRepository.saveAll(items);
+
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("orderNumber", newOrder.getOrderNumber());
+        payload.put("totalAmount", newOrder.getTotalAmount());
+        payload.put("paymentMethod", newOrder.getPaymentMethod());
+        payload.put("storeEmail", notificationEmail);
+
+        applicationEventPublisher.publishEvent(new AlarmEvent(
+                AlarmType.ORDER_CREATED,
+                LocalDateTime.now(),
+                payload
+        ));
     }
 
     private String generateOrderNumber() {

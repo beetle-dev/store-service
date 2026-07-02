@@ -62,15 +62,6 @@ public class S3Service {
         }
     }
 
-    // todo Presigned URL (프론트엔드 직접 업로드) ────────────
-    public String generatePresignedUploadUrl(String key, Duration ttl) {
-        PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
-                .signatureDuration(ttl)
-                .putObjectRequest(b -> b.bucket(bucket).key(key))
-                .build();
-        return s3Presigner.presignPutObject(presignRequest).url().toString();
-    }
-
     public String generatePresignedDownloadUrl(String key) {
         GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
                 .signatureDuration(Duration.ofMinutes(15))

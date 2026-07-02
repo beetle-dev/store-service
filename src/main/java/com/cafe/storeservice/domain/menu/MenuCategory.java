@@ -32,6 +32,6 @@ public class MenuCategory {
     public void modified(MenuCategoryModifyReqDto reqDto) {
         if (StringUtils.hasText(reqDto.getName())) this.name = reqDto.getName();
         if (reqDto.getSortOrder() != null) this.sortOrder = reqDto.getSortOrder();
-        if (reqDto.getSortOrder() != null) this.isActive = reqDto.getIsActive();
+        if (reqDto.getIsActive() != null) this.isActive = reqDto.getIsActive();
     }
 }
