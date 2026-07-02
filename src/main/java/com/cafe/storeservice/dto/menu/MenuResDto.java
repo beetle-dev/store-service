@@ -1,12 +1,14 @@
 package com.cafe.storeservice.dto.menu;
 
 import com.cafe.storeservice.domain.menu.Menu;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class MenuResDto {
     private Long id;
