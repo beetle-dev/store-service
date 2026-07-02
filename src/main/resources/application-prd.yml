@@ -46,7 +46,8 @@ gateway:
   secret: ${GATEWAY_SECRET}
 
 kafka:
-  bootstrap-servers: kafka:9092
+  bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+
 
 alarm:
   notification-email: ${ALARM_NOTIFICATION_EMAIL}
